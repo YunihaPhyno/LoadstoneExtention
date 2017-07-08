@@ -8,8 +8,14 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "content_scripts": [
+    {
+      "matches": ["http://jp.finalfantasyxiv.com/lodestone/my/blog/post/"],
+      "js": ["jquery/jquery-3.2.1.min.js","main.js"],
+      "run_at": "document_start"
+    }
+  ],
   "background": {
-
     "scripts": [
       "hot-reload.js"
     ]
