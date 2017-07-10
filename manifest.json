@@ -12,6 +12,7 @@
     {
       "matches": ["http://jp.finalfantasyxiv.com/lodestone/my/blog/post/"],
       "js": ["jquery/jquery-3.2.1.min.js","main.js"],
+      "css": ["modal-test.css"],
       "run_at": "document_start"
     }
   ],
