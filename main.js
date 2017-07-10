@@ -1,6 +1,8 @@
 (window.onload = main);
 
 function main () {
+	addFlickrButton ();
+
 	$("#breadcrumb")[0].innerHTML = $("#breadcrumb")[0].innerHTML.replace(/日記/,"ダイアリー");
 	
 	console.log ();
@@ -8,6 +10,17 @@ function main () {
 	var testAddress = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=7633b48cbee42b2fed0aa22b08ea8b3c&user_id=152412377%40N03&format=rest";
 
 	requestSearch(testAddress);
+
+
+}
+
+
+function addFlickrButton () {
+	var title = $("#img_select");
+	if (title == undefined) {
+		setTimeout(testloop,1000);
+	}
+	$('<ul><li><a href="javascript:void(0);" class="btn__color--radius" id="embedfiles">Flickr画像を参照</a></li></ul>').insertAfter('#container>ul');
 }
 
 function requestSearch(uri) {
@@ -23,8 +36,7 @@ function readyStateChange(event) {
 	var ajax = event.target;
 	var data = null;
 	if (ajax.readyState == 4) {
-		if ((ajax.status >= 200 && ajax.status < 300)
-			|| (ajax.status == 304)) {
+		if ((ajax.status >= 200 && ajax.status < 300) || (ajax.status == 304)) {
 			data = ajax.responseXML;
 			if (data != null) {
 				getResults(data);
