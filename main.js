@@ -16,12 +16,21 @@ function main () {
 
 
 function addFlickrButton () {
+	var btnFlickrDOMId = "ButtonFlickr";
 	var title = $("#img_select");
 	if (title == undefined) {
 		setTimeout(testloop,1000);
 	}
-	$('<ul><li><a href="javascript:void(0);" class="btn__color--radius" id="embedfiles">Flickr画像を参照</a></li></ul>').insertAfter('#container>ul');
+	$('<ul><li><a href="javascript:void(0);" class="btn__color--radius" id=' + btnFlickrDOMId + '>Flickr画像を参照</a></li></ul>').insertAfter('#container>ul');
+	var btnFlickr = document.getElementById(btnFlickrDOMId);
+	btnFlickr.addEventListener("click", onClickButtonFlickr, false);
 }
+
+function onClickButtonFlickr () {
+	alert ("Welcome to Flickr");
+}
+
+
 
 function requestSearch(uri) {
 	console.log(uri);
