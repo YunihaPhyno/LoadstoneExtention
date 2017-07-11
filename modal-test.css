@@ -1,30 +1,18 @@
-#modal-content{
+#modalWindowFlickr{
 	z-index:100022;
-	width:50%;
-	margin:1.5em auto 0;
-	padding:10px 20px;
+	position: absolute;
 	display:none;
+	width:1000px;
+    height:auto;
+    margin-left: -60px;
+    margin-top: -80px;
+    color: #ccc;
+    border-radius: 6px;
+    background-color: #383838;
+    box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25) inset, 0px 1px 4px 0px rgba(0,0,0,0.25);
 }
 
-.modal-p{
-	margin-top:1em;
-}
-
-.modal-p:first-child{
-	margin-top:0;
-}
-
-.button-link{
-	color:#00f;
-	text-decoration:underline;
-}
- 
-.button-link:hover{
-	cursor:pointer;
-	color:#f00;
-}
-
-#modal-overlay{
+#modalOverlayFlickr{
 	z-index:100009;
 	display:none;
 	position:fixed;
