@@ -1,24 +1,35 @@
 (window.onload = main);
+var btnFlickrDOMId = "ButtonFlickr";
+var modalWindowFlickrDomId = "modal-content";
+
+
 
 function main () {
 	addFlickrButton ();
-	$("#breadcrumb")[0].innerHTML = $("#breadcrumb")[0].innerHTML.replace(/日記/,"ダイアリー");
 	
 	console.log ();
 	var userId = "152412377@N03";
 	var testAddress = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=7633b48cbee42b2fed0aa22b08ea8b3c&user_id=152412377%40N03&format=rest";
 
-	requestSearch(testAddress);
-
+	$("body").append('<div id="' + modalWindowFlickrDomId + '" style="opacity: 1; position: absolute; top: 166px; left: 642.5px;"><p>「閉じる」か「背景」をクリックするとモーダルウィンドウを終了します。</p><p><a id="modal-close" class="button-link">閉じる</a></p></div>');
 	
-	$("body").append('<div id="modal-content" style="opacity: 1; position: absolute; top: 166px; left: 294.5px;"><p>「閉じる」か「背景」をクリックするとモーダルウィンドウを終了します。</p><p><a id="modal-close" class="button-link">閉じる</a></p></div>');
-	
-
+	createModalContentWindow();
 }
 
+function createModalContentWindow () {
+	$("body").append('<div id="' + modalWindowFlickrDomId + '" style="opacity: 1; position: absolute; top: 166px; left: 642.5px;"></div>');
+	
+	var mordalWindow = $("#" + modalWindowFlickrDomId);
+	mordalWindow.append ('<h3 class="heading--lg parts__space--add">画像を選択</h3>');
+
+	var imgSelectBoxDomId = "img_select_box_flickr";
+	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '" class="sys_img_select_box"></div>');
+	var imgSelectBox = mordalWindow.children("#" + imgSelectBoxDomId);
+	imgSelectBox.append('<ul class="upload__list clearfix sys__upload__list"></ul>');
+	requestSearch(testAddress);
+}
 
 function addFlickrButton () {
-	var btnFlickrDOMId = "ButtonFlickr";
 	var title = $("#img_select");
 	if (title == undefined) {
 		setTimeout(testloop,1000);
@@ -108,6 +119,8 @@ function getResults(data) {
 	var photos = data.getElementsByTagName('photo');
 	var str = '';
 	console.log(photos);
+
+	$("#"+modalWindowFlickrDomId).append('<ul class="upload__list clearfix sys__upload__list"></ul>');
 	for (var i = 0, count = photos.length; i < count; i++) {
 
 		var farmId = photos[i].getAttribute('farm');
@@ -119,6 +132,8 @@ function getResults(data) {
 		var image = new Image();
 		console.log(url);
 		image.src = url;
-		//display.appendChild(image);
+		
+		$("#"+modalWindowFlickrDomId+">ul").append('<li class="js__images" data-uri="' + url + '" data-isexteral style="cursor: pointer;"><img src="' + url + '"></li>');
+		if (i > 10) break;
 	}
 }
