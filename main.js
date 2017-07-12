@@ -4,7 +4,8 @@ var modalWindowFlickrDomId = "modalWindowFlickr";
 var overlayDomId = "modalOverlayFlickr";
 var imgSelectBoxDomId = "imgSelectBoxFlickr";
 var userId = "152412377@N03";
-var testAddress = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8013aa7e65fc72888f4f1eae7dadc448&user_id=152412377%40N03&format=rest";
+var testAddress = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=730f880c45aed14a1e0cee8ff851b4d2&user_id=152412377%40N03&format=rest";
+var flickrPhotos;
 
 function main () {
 	//モーダルウィンドウの追加
@@ -29,7 +30,15 @@ function createTitle (mordalWindow) {
 }
 
 function createImageSelectBox (mordalWindow) {
-	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '" class="sys_img_select_box"><ul class="clearfix"></ul></div>');
+	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul></ul></div>');
+	var imgSelectBox = $("#"+imgSelectBoxDomId);
+	for (var i = 0; i < 10; i++) {
+		imgSelectBox.children("ul").append ('<li class="flame"></li>');
+	}
+}
+
+function getFlickrImgUrl (photo) {
+	return "http://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +".jpg";
 }
 
 //----------------フリッカーボタン関係------------------
@@ -57,7 +66,7 @@ function onClickFlickrButton () {
 	$("#"+modalWindowFlickrDomId).fadeIn("slow");
 	$("#"+overlayDomId).fadeIn("slow");
 
-	//requestSearch(testAddress);
+	requestSearch(testAddress);
 
 	centeringModalSyncer();
 }
@@ -103,7 +112,8 @@ function centeringModalSyncer(){
 
 	//[#modal-content]のCSSに[left]の値(pxleft)を設定
 	modalWindow.css({"left": pxleft + "px"});
-	modalWindow.css({"top": pxtop + "px"});
+	//modalWindow.css({"top": pxtop + "px"});
+	modalWindow.css({"top": 50 + "%"});
 
 }
 
@@ -130,22 +140,17 @@ function readyStateChange(event) {
 }
 
 function getResults(data) {
-	var photos = data.getElementsByTagName('photo');
-	var str = '';
-	console.log(photos);
-	for (var i = 0, count = photos.length; i < count; i++) {
+	flickrPhotos = data.getElementsByTagName('photo');
+	console.log (flickrPhotos);
+	setImgToImgSelectBox ();
+}
 
-		var farmId = photos[i].getAttribute('farm');
-		var serverId = photos[i].getAttribute('server');
-		var id = photos[i].getAttribute('id');
-		var secret = photos[i].getAttribute('secret');
-
-		var url = "http://farm" + farmId + ".staticflickr.com/"+ serverId +"/" + id + "_"+ secret +".jpg";
-		var image = new Image();
-		console.log(url);
-		image.src = url;
-		
-		$("#"+imgSelectBoxDomId+">ul").append('<li class="js__images" data-isexteral style="cursor: pointer;"><img src="' + url + '" width="110"></li>');
-		if (i > 10) break;
+function setImgToImgSelectBox () {
+	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
+	console.log(selectBoxList);
+	for (var i = 0; i < selectBoxList.length; i++) {
+		$(selectBoxList[i]).children("img").remove();
+		$(selectBoxList[i]).append($("<img>").attr("src", getFlickrImgUrl (flickrPhotos[i])));
 	}
 }
+
