@@ -44,6 +44,21 @@
     vertical-align: middle;
 }
 
+#imgSelectBoxFlickr li.check:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: block;
+    width: 32px;
+    height: 32px;
+    background: url(http://img.finalfantasyxiv.com/lds/h/w/A34S2eSjt8E4ETOjYJHQZ6qQyA.png) no-repeat 0 0;
+    -moz-background-size: 32px 32px;
+    -o-background-size: 32px 32px;
+    -webkit-background-size: 32px 32px;
+    background-size: 32px 32px;
+}
+
 #imgSelectBoxFlickr img{
     width:auto;
     height:auto;

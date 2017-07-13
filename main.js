@@ -32,8 +32,8 @@ function createTitle (mordalWindow) {
 function createImageSelectBox (mordalWindow) {
 	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul></ul></div>');
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
-	for (var i = 0; i < 10; i++) {
-		imgSelectBox.children("ul").append ('<li class="flame"></li>');
+	for (var i = 0; i < 24; i++) {
+		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');
 	}
 }
 
@@ -142,6 +142,11 @@ function readyStateChange(event) {
 function getResults(data) {
 	flickrPhotos = data.getElementsByTagName('photo');
 	console.log (flickrPhotos);
+
+	for (var i = 0; i < flickrPhotos.length; i++) {
+		flickrPhotos[i].selected = false;
+	}
+	
 	setImgToImgSelectBox ();
 }
 
@@ -151,6 +156,19 @@ function setImgToImgSelectBox () {
 	for (var i = 0; i < selectBoxList.length; i++) {
 		$(selectBoxList[i]).children("img").remove();
 		$(selectBoxList[i]).append($("<img>").attr("src", getFlickrImgUrl (flickrPhotos[i])));
+		$(selectBoxList[i]).click (onClickImgSelectBox);
 	}
+}
+
+function onClickImgSelectBox () {
+	var id = Number($(this).attr("name"));
+
+	flickrPhotos[id].selected = !flickrPhotos[id].selected;
+	if (flickrPhotos[id].selected) {
+		$(this).attr("class", "flame check");
+	} else {
+		$(this).attr("class", "");
+	}
+
 }
 
