@@ -14,8 +14,6 @@ function main () {
 
 	//フリッカーボタンの追加
 	addFlickrButton ();
-
-	requestSearch(testAddress);
 }
 
 //----------------モーダルウィンドウ関係--------------------
@@ -40,6 +38,7 @@ function createImageSelectBox (mordalWindow) {
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
 	for (var i = 0; i < 24; i++) {
 		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');
+		imgSelectBox.children("ul").children("li[name="+ i +"]").click(onClickImgSelectBox);
 	}
 }
 
@@ -79,6 +78,12 @@ function onClickFlickrButton () {
 	centeringModalSyncer();
 
 	$("#embedfiles").click();
+
+	//画像リスト取得(コールバックで画像表示)
+	requestSearch(testAddress);
+
+	//アップロードファイルリストと同期をとる
+	syncUploadFileList ();
 }
 
 function createOverlay () {
@@ -167,24 +172,28 @@ function setImgToImgSelectBox () {
 	for (var i = 0; i < selectBoxList.length; i++) {
 		$(selectBoxList[i]).children("img").remove();
 		$(selectBoxList[i]).append($("<img>").attr("src", getFlickrImgUrl (flickrPhotos[i])));
-		$(selectBoxList[i]).click (onClickImgSelectBox);
 	}
 	selectBoxStatus = new Array(selectBoxList.length);
 }
-
 
 function onClickImgSelectBox () {
 	console.log ("onClickImgSelectBox");
 	var selectBox = $(this);
 	selectBox.blur();
 	var id = Number(selectBox.attr("name"));
+	var url = selectBox.children("img").attr("src");
 
+	//同期がちゃんととれていれば選択されていないときclassは空になる
 	if (selectBox.attr("class") == "") {
-		$("#external_file_uri").val(getFlickrImgUrl (flickrPhotos[id]));
+		//テキストボックスにurlを追加して「参照」ボタンを押す
+		$("#external_file_uri").val(url);
 		$("#external_file_select").click();
 	} else {
-		
+		//自分のurlがあるリストアイテムの「×」ボタンを押す
+		deleteSelectedFile (url);
 	}
+
+	//selectBoxとsys_upload__statusの同期
 	syncUploadFileList();
 }
 
@@ -201,6 +210,16 @@ function syncUploadFileList () {
 				$(selectBox).attr("class", "flame check");
 				break;
 			}
+		}
+	}
+}
+
+//urlがあるリストアイテムの「×」ボタンを押す
+function deleteSelectedFile (url) {
+	var uploadFileList = $("#sys_upload__status>ul");
+	for (var i = 0; i < uploadFileList.length; i++) {
+		if (uploadFileList[i].childNodes[1].innerHTML == url) {
+			uploadFileList[i].childNodes[3].childNodes[0].click();
 		}
 	}
 }
