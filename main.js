@@ -1,5 +1,3 @@
-// Todo sys_upload__statusと同期をとる必要がある(たまに登録に失敗する？？)
-
 (window.onload = main);
 var btnFlickrDOMId = "ButtonFlickr";
 var modalWindowFlickrDomId = "modalWindowFlickr";
@@ -177,19 +175,32 @@ function setImgToImgSelectBox () {
 
 function onClickImgSelectBox () {
 	console.log ("onClickImgSelectBox");
-	$(this).blur() ;
-	var id = Number($(this).attr("name"));
+	var selectBox = $(this);
+	selectBox.blur();
+	var id = Number(selectBox.attr("name"));
 
-	if (!selectBoxStatus[id]) {
-		$(this).attr("class", "flame check");
+	if (selectBox.attr("class") == "") {
 		$("#external_file_uri").val(getFlickrImgUrl (flickrPhotos[id]));
 		$("#external_file_select").click();
-		selectBoxStatus[id] = $("#sys_upload__status>ul")[0];
 	} else {
-		$(this).attr("class", "");
-		$(selectBoxStatus[id]).remove();
-		selectBoxStatus[id] = null;
+		
 	}
-
+	syncUploadFileList();
 }
 
+//アップロードファイルリストと同期をとる
+function syncUploadFileList () {
+	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
+	var uploadFileList = $("#sys_upload__status>ul");
+	for (var i = 0; i < selectBoxList.length; i++) {
+		var selectBox = $(selectBoxList[i]);
+		var url = selectBox.children('img').attr('src');
+		$(selectBox).attr("class", "");
+		for (var j = 0; j < uploadFileList.length; j++) {
+			if (uploadFileList[j].childNodes[1].innerHTML == url) {
+				$(selectBox).attr("class", "flame check");
+				break;
+			}
+		}
+	}
+}
