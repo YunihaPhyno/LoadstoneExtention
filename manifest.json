@@ -1,8 +1,8 @@
 {
-  "name": "Example 0: Hello World in Console",
+  "name": "Loadstone Extension",
   "version": "0.9.0",
   "manifest_version": 2,
-  "description": "This is an example to print Hello World in Chrome console",
+  "description": "Loadstone Extension For Flickr",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
