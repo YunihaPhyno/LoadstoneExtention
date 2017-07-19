@@ -1,6 +1,6 @@
 {
   "name": "Example 0: Hello World in Console",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "manifest_version": 2,
   "description": "This is an example to print Hello World in Chrome console",
   "icons": {
@@ -8,6 +8,9 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
+  "permissions" : [
+    "storage"
+  ],
   "content_scripts": [
     {
       "matches": ["http://jp.finalfantasyxiv.com/lodestone/my/blog/post/"],
@@ -20,5 +23,6 @@
     "scripts": [
       "hot-reload.js"
     ]
-  }
+  },
+  "options_page":"options.html"
 }

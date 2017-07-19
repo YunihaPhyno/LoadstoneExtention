@@ -3,12 +3,14 @@ var btnFlickrDOMId = "ButtonFlickr";
 var modalWindowFlickrDomId = "modalWindowFlickr";
 var overlayDomId = "modalOverlayFlickr";
 var imgSelectBoxDomId = "imgSelectBoxFlickr";
-var userId = "152412377@N03";
-var testAddress = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=730f880c45aed14a1e0cee8ff851b4d2&user_id=152412377%40N03&format=rest";
+var flickrUserId = "";
 var flickrPhotos;
 var selectBoxStatus;
 
 function main () {
+	//Chrome拡張のローカルストレージへアクセスリクエスト
+	chrome.storage.sync.get(['flickrUserId'], OnLoadFlickrUserId);
+
 	//モーダルウィンドウの追加
 	createModalWindow();
 
@@ -16,9 +18,15 @@ function main () {
 	addFlickrButton ();
 }
 
+function OnLoadFlickrUserId (response) {
+	flickrUserId = response["flickrUserId"];
+	//console.log (flickrUserId);
+}
+
+
 //----------------モーダルウィンドウ関係--------------------
 function createModalWindow () {
-	console.log ("createModalWindow");
+	//console.log ("createModalWindow");
 	//DOMの追加
 	$("body").append('<div id="' + modalWindowFlickrDomId + '"></div>');
 	//$("body").append('<div id="' + modalWindowFlickrDomId + '" class="sys_img_select_box" style="opacity: 1; position: absolute; top: 166px; left: 642.5px;"><ul class="upload__list clearfix sys__upload__list"></ul><ul class="btn__pager sys_upload_pager"><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev--all js__tooltip" data-tooltip="先頭へ"></a></li><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev js__tooltip" data-tooltip="前へ"></a></li><li class="btn__pager__current sys_current_page"></li><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next js__tooltip" data-tooltip="次へ"></a></li><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next--all js__tooltip" data-tooltip="最後へ"></a></li></ul><a href="javascript:void(0);" class="btn__color--radius parts__space--reset sys_upload_submit">選択画像で決定</a></div>');
@@ -28,12 +36,12 @@ function createModalWindow () {
 }
 
 function createTitle (mordalWindow) {
-	console.log ("createTitle");
+	//console.log ("createTitle");
 	mordalWindow.append ('<h3 class="heading--lg parts__space--add">画像を選択</h3>');
 }
 
 function createImageSelectBox (mordalWindow) {
-	console.log ("createImageSelectBox");
+	//console.log ("createImageSelectBox");
 	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul></ul></div>');
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
 	for (var i = 0; i < 24; i++) {
@@ -43,13 +51,13 @@ function createImageSelectBox (mordalWindow) {
 }
 
 function getFlickrImgUrl (photo) {
-	console.log ("getFlickrImgUrl");
+	//console.log ("getFlickrImgUrl");
 	return "http://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +"_h.jpg";
 }
 
 //----------------フリッカーボタン関係------------------
 function addFlickrButton () {
-	console.log ("addFlickrButton");
+	//console.log ("addFlickrButton");
 
 	//img_selectは遅延読み込みされるため読み込みを待つ
 	var title = $("#img_select");
@@ -65,7 +73,7 @@ function addFlickrButton () {
 }
 
 function onClickFlickrButton () {
-	console.log ("onClickFlickrButton");
+	//console.log ("onClickFlickrButton");
 	//ボタンからフォーカスを外す
 	$(this).blur() ;
 
@@ -80,14 +88,21 @@ function onClickFlickrButton () {
 	$("#embedfiles").click();
 
 	//画像リスト取得(コールバックで画像表示)
-	requestSearch(testAddress);
+	//console.log (getFlickrAPIURL());
+	requestSearch(getFlickrAPIURL());
 
 	//アップロードファイルリストと同期をとる
 	syncUploadFileList ();
 }
 
+function getFlickrAPIURL () {
+	var baseUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
+	var api_key = "730f880c45aed14a1e0cee8ff851b4d2";
+	return baseUrl + "&" + "api_key=" + api_key + "&" + "user_id=" + flickrUserId + "&format=rest";
+}
+
 function createOverlay () {
-	console.log ("createOverlay");
+	//console.log ("createOverlay");
 	//新しくモーダルウィンドウを起動しない
 	if($("#" + overlayDomId)[0]) {
 		return false ;
@@ -100,20 +115,20 @@ function createOverlay () {
 }
 
 function onClickOverlay () {
-	console.log ("onClickOverlay");
+	//console.log ("onClickOverlay");
 	//フェードアウトさせる
 	$("#"+overlayDomId+",#"+modalWindowFlickrDomId).fadeOut("slow",afterFadeOutOverlay);
 }
 
 function afterFadeOutOverlay () {
-	console.log ("afterFadeOutOverlay");
+	//console.log ("afterFadeOutOverlay");
 	//フェードアウト後、[#modal-overlay]をHTML(DOM)上から削除
 	$("#"+overlayDomId).remove();
 }
 
 //センタリングをする関数
 function centeringModalSyncer(){
-	console.log ("centeringModalSyncer");
+	//console.log ("centeringModalSyncer");
 	//ウィンドウサイズ
 	var windowHeight = $(window).height();
 	var windowWidth = $(window).width();
@@ -127,7 +142,7 @@ function centeringModalSyncer(){
 	var pxleft = ((windowWidth - modalWidth)/2);
 	var pxtop = $(window).scrollTop() - modalHeight * 2 + 30;//((windowHeight - modalHeight)/2);
 
-	console.log($(window).scrollTop());
+	//console.log($(window).scrollTop());
 
 	//[#modal-content]のCSSに[left]の値(pxleft)を設定
 	modalWindow.css({"left": pxleft + "px"});
@@ -137,7 +152,7 @@ function centeringModalSyncer(){
 }
 
 function requestSearch(uri) {
-	console.log ("requestSearch");
+	//console.log ("requestSearch");
 	var ajax = new XMLHttpRequest();
 	ajax.onreadystatechange = readyStateChange;
 	ajax.open('GET', uri, true);
@@ -146,7 +161,7 @@ function requestSearch(uri) {
 }
 
 function readyStateChange(event) {
-	console.log ("readyStateChange");
+	//console.log ("readyStateChange");
 	var ajax = event.target;
 	var data = null;
 	if (ajax.readyState == 4) {
@@ -160,14 +175,14 @@ function readyStateChange(event) {
 }
 
 function getResults(data) {
-	console.log ("getResults");
+	//console.log ("getResults");
 	flickrPhotos = data.getElementsByTagName('photo');
-	console.log (flickrPhotos);
+	//console.log (flickrPhotos);
 	setImgToImgSelectBox ();
 }
 
 function setImgToImgSelectBox () {
-	console.log ("setImgToImgSelectBox");
+	//console.log ("setImgToImgSelectBox");
 	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
 	for (var i = 0; i < selectBoxList.length; i++) {
 		$(selectBoxList[i]).children("img").remove();
@@ -177,7 +192,7 @@ function setImgToImgSelectBox () {
 }
 
 function onClickImgSelectBox () {
-	console.log ("onClickImgSelectBox");
+	//console.log ("onClickImgSelectBox");
 	var selectBox = $(this);
 	selectBox.blur();
 	var id = Number(selectBox.attr("name"));
