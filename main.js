@@ -5,24 +5,37 @@ var overlayDomId = "modalOverlayFlickr";
 var imgSelectBoxDomId = "imgSelectBoxFlickr";
 var flickrUserId = "";
 var flickrPhotos;
+var fixedPhrase = "";
+var loadOptions = false;
 var selectBoxStatus;
 
 function main () {
 	//Chrome拡張のローカルストレージへアクセスリクエスト
-	chrome.storage.sync.get(['flickrUserId'], OnLoadFlickrUserId);
+	chrome.storage.sync.get(["flickrUserId", "fixedPhrase"], OnLoadOptions);
 
 	//モーダルウィンドウの追加
 	createModalWindow();
 
 	//フリッカーボタンの追加
 	addFlickrButton ();
+
+	//定型文の入力
+	insertFixedPhrase ();
 }
 
-function OnLoadFlickrUserId (response) {
+function OnLoadOptions (response) {
+	console.log (response);
 	flickrUserId = response["flickrUserId"];
-	//console.log (flickrUserId);
+	insertFixedPhrase (response["fixedPhrase"]);
 }
 
+
+//----------------定型文関係--------------------
+function insertFixedPhrase (text) {
+	if (!$("#input_body").val()) {
+		$("#input_body").val(text);
+	}
+}
 
 //----------------モーダルウィンドウ関係--------------------
 function createModalWindow () {
@@ -44,7 +57,7 @@ function createImageSelectBox (mordalWindow) {
 	//console.log ("createImageSelectBox");
 	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul></ul></div>');
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
-	for (var i = 0; i < 24; i++) {
+	for (var i = 0; i < 8*10; i++) {
 		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');
 		imgSelectBox.children("ul").children("li[name="+ i +"]").click(onClickImgSelectBox);
 	}
