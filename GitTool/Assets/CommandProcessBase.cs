@@ -76,4 +76,5 @@ public class CommandProcessBase
 
         return logs.Length;
     }
+
 }
