@@ -8,9 +8,9 @@ public class GitController : CommandProcessBase
     // constructor
     public GitController(string gitDirectory) : base(gitDirectory) {}
 
-    public void Status()
+    public void Status(string options = "")
     {
-        Exec("git status");
+        Exec("git status " + options);
     }
 
     public void Pull()
@@ -37,6 +37,7 @@ public class GitController : CommandProcessBase
     {
         Exec("git branch");
     }
+
 
 
     

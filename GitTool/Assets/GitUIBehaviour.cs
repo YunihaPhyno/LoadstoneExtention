@@ -6,7 +6,29 @@ using System.Text.RegularExpressions;
 public class GitUIBehaviour : MonoBehaviour
 {
     GitController git;
-    string[] modifiedFileNames;
+
+    public class FileStatus
+    {
+        public enum Status {
+            NONE,
+            MODIFIED,
+            DELETED,
+            UNTRACKED,
+        }
+
+        public Status status = Status.NONE;
+
+        public string filePath = "";
+        public string GetFileName()
+        {
+            return Regex.Match(filePath,@"(.*/)+([a-zA-Z]+.*$)").Value;
+        }
+    }
+
+    FileStatus[] stagedFiles;
+    FileStatus[] notStagedFiles;
+    FileStatus[] untrackedFiles;
+
     int logPageNum = 0;
 
     string currentBranchName;
@@ -30,7 +52,10 @@ public class GitUIBehaviour : MonoBehaviour
 		git = new GitController(gitDirectory);
         UpdateBranchNames();
 		branchTextArea.text = "Branch : " + currentBranchName;
-		OnPushStatusButton();        
+		OnPushStatusButton();
+
+        //for debug
+        UpdateFileLists();
 	}
 
 	public void OnPushStatusButton()
@@ -53,8 +78,8 @@ public class GitUIBehaviour : MonoBehaviour
 
     public void OnPushAddAllButton()
     {
-        UpdateModifiedFiles();
-        git.Add(modifiedFileNames);
+        UpdateFileLists();
+        //git.Add(modifiedFileNames);
         git.Status();
         UpdateLog(0);
     }
@@ -77,7 +102,7 @@ public class GitUIBehaviour : MonoBehaviour
             nextButton.interactable = true;
         }
 
-        if (logPageNum == git.GetNumOffsets() - 1)
+        if (logPageNum == git.GetNumOffsets())
         {
             prevButton.interactable = false;
         }
@@ -104,18 +129,43 @@ public class GitUIBehaviour : MonoBehaviour
     }
 
     // git statusから入手した変更のあるファイルを保存する
-    public void UpdateModifiedFiles()
+    public void UpdateFileLists()
     {
         log.d("GitController.UpdateModifiedFiles()");
-        git.Status();
+        git.Status("-s");
         string status = git.GetCommandlineLog();
-        MatchCollection matches = Regex.Matches(status, "modified:.*\n");
-        modifiedFileNames = new string[matches.Count];
 
-        for (int i = 0; i < matches.Count; i++)
+        stagedFiles = GetFileStatusList(status, @"[MD]\s\s\S+\n");
+        notStagedFiles = GetFileStatusList(status, @"\s[MD]\s\S+\n");
+        untrackedFiles = GetFileStatusList(status, @"\?\?\s\S+\n");
+    }
+
+    public static FileStatus[] GetFileStatusList(string gitStatusLog, string regex)
+    {
+        MatchCollection stagedLog = Regex.Matches(gitStatusLog, regex);
+        FileStatus[] files = new FileStatus[stagedLog.Count];
+        for (int i = 0; i < stagedLog.Count; i++)
         {
-            modifiedFileNames[i] = Regex.Replace(matches[i].Value, @"modified:\s*(\S+)\n", "$1");
+            FileStatus file = new FileStatus();
+            file.filePath = stagedLog[i].Value.Substring(3, stagedLog[i].Value.Length - 4);
+            if (stagedLog[i].Value[0] == 'M' || stagedLog[i].Value[1] == 'M')
+            {
+                file.status = FileStatus.Status.MODIFIED;
+            }
+
+            else if (stagedLog[i].Value[0] == 'D' || stagedLog[i].Value[1] == 'D')
+            {
+                file.status = FileStatus.Status.DELETED;
+            }
+
+            else if (stagedLog[i].Value[0] == '?')
+            {
+                file.status = FileStatus.Status.UNTRACKED;
+            }
+
+            files[i] = file;
         }
+        return files;
     }
 
     // ブランチ更新
@@ -135,4 +185,5 @@ public class GitUIBehaviour : MonoBehaviour
         }
         log.d(branchNames);
     }
+
 }
