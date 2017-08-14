@@ -5,6 +5,9 @@ public class CommandProcessBase
 {
     System.Diagnostics.Process process;
 
+    int tail = -1;
+    string[] logs = new string[100];
+
     //参考 https://dobon.net/vb/dotnet/process/standardoutput.html
     protected CommandProcessBase(string workingDirectory)
     {
@@ -32,7 +35,7 @@ public class CommandProcessBase
         process.StartInfo.CreateNoWindow = false; //true;
     }
 
-    protected string Exec(string command)
+    protected void Exec(string command)
     {
         log.d("CommandProcessBase.Exec(\"" + command + "\")");
         
@@ -47,11 +50,30 @@ public class CommandProcessBase
         process.Start();
 
         //出力を読み取る
-        string result = process.StandardOutput.ReadToEnd();
+        AddLog("$ " + command + "\n" + process.StandardOutput.ReadToEnd());
 
         process.WaitForExit();
         process.Close();
-        log.d("result : " + result);
-        return result;
+    }
+
+    void AddLog(string stdout)
+    {
+        tail++;
+        logs[tail % logs.Length] = stdout;
+    }
+
+    public string GetCommandlineLog(int offset = 0)
+    {
+        return logs [(tail - offset) % logs.Length];
+    }
+
+    public int GetNumOffsets()
+    {
+        if (tail < logs.Length)
+        {
+            return tail;
+        }
+
+        return logs.Length;
     }
 }
