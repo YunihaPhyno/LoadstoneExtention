@@ -4,32 +4,35 @@ using System.Collections;
 using System.Text.RegularExpressions;
 
 public class GitUIBehaviour : MonoBehaviour {
-    GitController git;
+	GitController git;
 
-    public string gitDirectory = "C:\\Users\\Yuniha\\Desktop\\LoadstoneExtention";
-    public Text resultTextArea;
-    public Text branchTextArea;
+	//public string gitDirectory = "C:\\Users\\Yuniha\\Desktop\\LoadstoneExtention";
+	string gitDirectory = "/Users/a-tatsuno/robkr";
+	//public string gitDirectory;
 
-    void Awake()
-    {
-        git = new GitController(gitDirectory);
-        branchTextArea.text = "Branch : " + git.GetCurrentBranchName();
-        OnPushStatusButton();        
-    }
+	public Text resultTextArea;
+	public Text branchTextArea;
 
-    public void OnPushStatusButton()
-    {
-        string stdout = git.Status();
-        resultTextArea.text += stdout;
-    }
+	void Awake()
+	{
+		git = new GitController(gitDirectory);
+		branchTextArea.text = "Branch : " + git.GetCurrentBranchName();
+		OnPushStatusButton();        
+	}
 
-    public void OnPushPullButton ()
-    {
-        resultTextArea.text += git.Pull();
-    }
+	public void OnPushStatusButton()
+	{
+		string stdout = git.Status();
+		resultTextArea.text += stdout;
+	}
 
-    public void OnPushPushButton()
-    {
-        resultTextArea.text += git.Push();
-    }
+	public void OnPushPullButton ()
+	{
+		resultTextArea.text += git.Pull();
+	}
+
+	public void OnPushPushButton()
+	{
+		resultTextArea.text += git.Push();
+	}
 }
