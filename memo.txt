@@ -1,0 +1,63 @@
+.bind('click.fb', 
+function(e) {
+	e.preventDefault();
+
+	if (busy) {
+		return;
+	}
+
+	busy = true;
+
+	$(this).blur();
+
+	selectedArray = [];
+	selectedIndex = 0;
+
+	var rel = $(this).attr('rel') || '';
+
+	if (!rel || rel == '' || rel === 'nofollow') {
+		selectedArray.push(this);
+
+	} else {
+		selectedArray = $("a[rel=" + rel + "], area[rel=" + rel + "]");
+		selectedIndex = selectedArray.index( this );
+	}
+
+	_start();
+
+	return;
+});
+
+<div id="fancybox-overlay" style="background-color: rgb(0, 0, 0); opacity: 0.6; cursor: pointer; height: 5236px; display: none;"></div>
+
+
+<div id="fancybox-overlay" style="background-color: rgb(0, 0, 0); opacity: 0.6; cursor: pointer; height: 5236px; display: block;"></div>
+<div id="fancybox-wrap" style="width: 1024px; height: auto; top: 564px; left: 419px; display: block;">
+	<div id="fancybox-outer">
+		<div id="fancybox-content" style="border-width: 0px; width: 1024px; height: 576px;">
+			<img id="fancybox-img" src="https://img2.finalfantasyxiv.com/accimg2/62/f3/62f302118409f290393c7e3bbe263f44a0204cdf.jpg" alt="" style="width: 100%;height: 100%"></div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+//表示
+$("#fancybox-overlay").attr('style','background-color: rgb(0, 0, 0); opacity: 0.6; cursor: pointer; height: 5236px; display: block;').click(
+	function(){
+		$("#fancybox-overlay").attr('style','background-color: rgb(0, 0, 0); opacity: 0.6; cursor: pointer; height: 5236px; display: none;');
+		$("#fancybox-wrap").attr("style","width: 1024px; height: auto; top: 564px; left: 419px; display: none;");
+
+	})
+$("#fancybox-wrap").attr("style","width: 1024px; height: auto; top: 564px; left: 419px; display: block;");
+$("#fancybox-content").attr("style","border-width: 0px; width: 1024px; height: 576px;").append('<img id="fancybox-img" src="http://farm5.staticflickr.com/4495/36747468174_cf6b594acf_h.jpg" alt="" style="width: 100%;height: 100%"></div>');
+$("#fancybox-left").attr("style","display: inline");
+$("#fancybox-right").attr("style","display: inline");
