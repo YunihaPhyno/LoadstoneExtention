@@ -1,12 +1,27 @@
+/*
+* TODO
+* 読めない！！！リファクタリング必須！！
+*　設計ミス！！ページャはFlickrAPIのpage機能で実装する！！←一応機能するけど最後のページバグってる！！（インデックス余りの問題）
+* イメージボックス中央寄せというかうん・・・
+* 機能単位でファイル分けを・・・
+* そもそもクラス化しましょう
+*/
+
+
 (window.onload = main);
 var btnFlickrDOMId = "ButtonFlickr";
 var modalWindowFlickrDomId = "modalWindowFlickr";
 var overlayDomId = "modalOverlayFlickr";
 var imgSelectBoxDomId = "imgSelectBoxFlickr";
+var pagerDomId = "pagerFlickr";
 var flickrUserId = "";
 var flickrPhotos;
 var fixedPhrase = "";
 var loadOptions = false;
+var imgBoxSize = new Object();
+imgBoxSize.rows = 3;
+imgBoxSize.cols = 8;
+imgBoxSize.square = imgBoxSize.rows * imgBoxSize.cols;
 var selectBoxStatus;
 
 function main () {
@@ -46,6 +61,7 @@ function createModalWindow () {
 	var mordalWindow = $("#" + modalWindowFlickrDomId);
 	createTitle (mordalWindow);
 	createImageSelectBox (mordalWindow);
+	createPager (mordalWindow);
 }
 
 function createTitle (mordalWindow) {
@@ -57,9 +73,87 @@ function createImageSelectBox (mordalWindow) {
 	//console.log ("createImageSelectBox");
 	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul></ul></div>');
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
-	for (var i = 0; i < 8*10; i++) {
+	for (var i = 0, length = imgBoxSize.rows*imgBoxSize.cols; i < length; i++) {
 		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');
 		imgSelectBox.children("ul").children("li[name="+ i +"]").click(onClickImgSelectBox);
+	}
+}
+
+function createPager (mordalWindow) {
+	mordalWindow.append ('<div id="' +pagerDomId+ '"><ul class="btn__pager sys_upload_pager"></ul></div>');
+	var pager = $("#" + pagerDomId);
+
+	// append children
+	pager.ul = pager.children("ul");
+	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev--all js__tooltip" data-tooltip="先頭へ"></a></li>');
+	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev js__tooltip" data-tooltip="前へ"></a></li>');
+	pager.ul.append('<li class="btn__pager__current sys_current_page" page_num=0 page_max=0>0ページ / 0ページ</li>');
+	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next js__tooltip" data-tooltip="次へ"></a></li>');
+	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next--all js__tooltip" data-tooltip="最後へ"></a></li>');
+	
+	pager.ul.li = pager.ul.children("li");
+	// set click event
+	pager.ul.li.children(".btn__pager__prev--all").click({type : "prev_all"},onClickBtnPager);
+	pager.ul.li.children(".btn__pager__prev").click({type : "prev"},onClickBtnPager);
+	pager.ul.li.children(".btn__pager__next").click({type : "next"},onClickBtnPager);
+	pager.ul.li.children(".btn__pager__next--all").click({type : "next_all"},onClickBtnPager);
+}
+
+function onClickBtnPager (event) {
+	console.log (event.data.type);
+
+	var pager = $("#" + pagerDomId);
+	pager.ul = pager.children('ul');
+	pager.ul.li = pager.ul.children('li')
+	pager.ul.pager_current = pager.ul.children('.btn__pager__current');
+
+	switch (event.data.type) {
+	case "prev_all":
+		//画像リスト取得(コールバックで画像表示)
+		requestSearch(getFlickrAPIURL(1));
+		break;
+	case "prev":
+		requestSearch(getFlickrAPIURL(Number(pager.ul.pager_current.attr("page_num")) - 1));
+		break;
+	case "next":
+		requestSearch(getFlickrAPIURL(Number(pager.ul.pager_current.attr("page_num")) + 1));
+		break;
+	case "next_all":
+		requestSearch(getFlickrAPIURL(Number(pager.ul.pager_current.attr("page_max"))));
+		break;
+	}
+	//アップロードファイルリストと同期をとる
+	syncUploadFileList ();
+}
+
+function setPage (pageNum) {
+	setImgToImgSelectBox ((pageNum - 1) * imgBoxSize.square);
+	updatePager(pageNum,Math.floor(flickrPhotos.length/imgBoxSize.square));
+}
+
+function updatePager (currentPagesNum, maxPagesNum) {
+	var pager = $("#" + pagerDomId);
+	pager.ul = pager.children('ul');
+	pager.ul.li = pager.ul.children('li')
+
+	pager.ul.pager_current = pager.ul.children('.btn__pager__current');
+	pager.ul.pager_current.attr("page_num",currentPagesNum);
+	pager.ul.pager_current.attr("page_max",maxPagesNum);
+	pager.ul.pager_current.text(String(currentPagesNum) + "ページ / " + String(maxPagesNum) + "ページ");
+	if (currentPagesNum == 1) {
+		pager.ul.li.children('.btn__pager__prev--all').attr("class", "icon-list__pager btn__pager__prev--all js__tooltip btn__pager__no");
+		pager.ul.li.children('.btn__pager__prev').attr("class", "icon-list__pager btn__pager__prev js__tooltip btn__pager__no");
+	} else {
+		pager.ul.li.children('.btn__pager__prev--all').attr("class", "icon-list__pager btn__pager__prev--all js__tooltip");
+		pager.ul.li.children('.btn__pager__prev').attr("class", "icon-list__pager btn__pager__prev js__tooltip");
+	}
+
+	if (currentPagesNum == maxPagesNum) {
+		pager.ul.li.children('.btn__pager__next--all').attr("class", "icon-list__pager btn__pager__next--all js__tooltip btn__pager__no");
+		pager.ul.li.children('.btn__pager__next').attr("class", "icon-list__pager btn__pager__next js__tooltip btn__pager__no");
+	} else {
+		pager.ul.li.children('.btn__pager__next--all').attr("class", "icon-list__pager btn__pager__next--all js__tooltip");
+		pager.ul.li.children('.btn__pager__next').attr("class", "icon-list__pager btn__pager__next js__tooltip");
 	}
 }
 
@@ -101,17 +195,16 @@ function onClickFlickrButton () {
 	$("#embedfiles").click();
 
 	//画像リスト取得(コールバックで画像表示)
-	//console.log (getFlickrAPIURL());
-	requestSearch(getFlickrAPIURL());
+	requestSearch(getFlickrAPIURL(1));
 
 	//アップロードファイルリストと同期をとる
 	syncUploadFileList ();
 }
 
-function getFlickrAPIURL () {
+function getFlickrAPIURL (pageNum) {
 	var baseUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
 	var api_key = "730f880c45aed14a1e0cee8ff851b4d2";
-	return baseUrl + "&" + "api_key=" + api_key + "&" + "user_id=" + flickrUserId + "&format=rest";
+	return baseUrl + "&" + "api_key=" + api_key + "&" + "user_id=" + flickrUserId + "&" + "per_page=" + imgBoxSize.square + "&" + "page=" + pageNum + "&format=rest";
 }
 
 function createOverlay () {
@@ -190,10 +283,13 @@ function readyStateChange(event) {
 function getResults(data) {
 	//console.log ("getResults");
 	flickrPhotos = data.getElementsByTagName('photo');
-	//console.log (flickrPhotos);
+	console.log (flickrPhotos);
 	setImgToImgSelectBox ();
+	//ページャ初期化
+	updatePager(data.getElementsByTagName('photos')[0].getAttribute('page'),data.getElementsByTagName('photos')[0].getAttribute('pages'));
+	syncUploadFileList();
 }
-
+	
 function setImgToImgSelectBox () {
 	//console.log ("setImgToImgSelectBox");
 	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
@@ -221,7 +317,7 @@ function onClickImgSelectBox () {
 		deleteSelectedFile (url);
 	}
 
-	//selectBoxとsys_upload__statusの同期
+	//アップロードファイルリストと同期をとる
 	syncUploadFileList();
 }
 
@@ -251,3 +347,4 @@ function deleteSelectedFile (url) {
 		}
 	}
 }
+
