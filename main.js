@@ -6,7 +6,7 @@
 * 機能単位でファイル分けを・・・
 * そもそもクラス化しましょう
 */
-
+console.log ("Loadstone Extension written by Yuniha Phyno.");
 
 (window.onload = main);
 var btnFlickrDOMId = "ButtonFlickr";
