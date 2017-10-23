@@ -19,7 +19,7 @@ var flickrPhotos;
 var fixedPhrase = "";
 var loadOptions = false;
 var imgBoxSize = new Object();
-imgBoxSize.rows = 3;
+imgBoxSize.rows = 4;
 imgBoxSize.cols = 8;
 imgBoxSize.square = imgBoxSize.rows * imgBoxSize.cols;
 var selectBoxStatus;
@@ -71,7 +71,7 @@ function createTitle (mordalWindow) {
 
 function createImageSelectBox (mordalWindow) {
 	//console.log ("createImageSelectBox");
-	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul></ul></div>');
+	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul style="margin-left: ' + ((1000 - 120 * imgBoxSize.cols) / 2) + 'px;"></ul></div>');
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
 	for (var i = 0, length = imgBoxSize.rows*imgBoxSize.cols; i < length; i++) {
 		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');
@@ -104,7 +104,7 @@ function onClickBtnPager (event) {
 
 	var pager = $("#" + pagerDomId);
 	pager.ul = pager.children('ul');
-	pager.ul.li = pager.ul.children('li')
+	pager.ul.li = pager.ul.children('li');
 	pager.ul.pager_current = pager.ul.children('.btn__pager__current');
 
 	switch (event.data.type) {
@@ -293,9 +293,12 @@ function getResults(data) {
 function setImgToImgSelectBox () {
 	//console.log ("setImgToImgSelectBox");
 	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
+	console.log (flickrPhotos.length);
 	for (var i = 0; i < selectBoxList.length; i++) {
 		$(selectBoxList[i]).children("img").remove();
-		$(selectBoxList[i]).append($("<img>").attr("src", getFlickrImgUrl (flickrPhotos[i])));
+		if (i < flickrPhotos.length) {
+			$(selectBoxList[i]).append($("<img>").attr("src", getFlickrImgUrl (flickrPhotos[i])));
+		}
 	}
 	selectBoxStatus = new Array(selectBoxList.length);
 }
