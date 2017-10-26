@@ -8,7 +8,7 @@ $(function(){
 
 
   // オプション画面の初期値を設定する
-  chrome.storage.sync.get(["flickrUserId", "fixedPhrase"], OnLoad);
+  chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum"], OnLoad);
 });
 
 function OnClickSavedButton () {
