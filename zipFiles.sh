@@ -1,4 +1,3 @@
-cd
 zip ./LoadstoneExtention.zip \
 icons/icon128.png \
 icons/icon16.png \
