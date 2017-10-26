@@ -24,9 +24,19 @@ imgBoxSize.cols = 8;
 imgBoxSize.square = imgBoxSize.rows * imgBoxSize.cols;
 var selectBoxStatus;
 
+// 実行を許可するページ
+
 function main () {
+	// 実行を許可するページ
+	console.log(location.href);
+	if (!/my\/blog\/post\//.test(location.href) && !/freecompany\/[0-9]+\/forum\/post/.test(location.href)) {
+		return;
+	}
+
+	console.log("スクリプト実行開始");
+
 	//Chrome拡張のローカルストレージへアクセスリクエスト
-	chrome.storage.sync.get(["flickrUserId", "fixedPhrase"], OnLoadOptions);
+	chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum"], OnLoadOptions);
 
 	//モーダルウィンドウの追加
 	createModalWindow();
@@ -41,7 +51,13 @@ function main () {
 function OnLoadOptions (response) {
 	console.log (response);
 	flickrUserId = response["flickrUserId"];
-	insertFixedPhrase (response["fixedPhrase"]);
+
+	if (/my\/blog\/post\//.test(location.href)){
+		insertFixedPhrase (response["fixedPhrase"]);
+	} else if (/freecompany\/[0-9]+\/forum\/post/.test(location.href)) {
+		insertFixedPhrase (response["fixedPhraseFCForum"]);
+	}
+	
 }
 
 
