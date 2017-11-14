@@ -36,8 +36,8 @@ function main () {
 	console.log("スクリプト実行開始");
 
 	//Chrome拡張のローカルストレージへアクセスリクエスト
-	chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum"], OnLoadOptions);
-
+	Chrome.Request(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum"]);
+	Chrome.Wait();
 	//モーダルウィンドウの追加
 	createModalWindow();
 
@@ -218,9 +218,8 @@ function onClickFlickrButton () {
 }
 
 function getFlickrAPIURL (pageNum) {
-	var baseUrl = "https://api.flickr.com/services/rest/?method=flickr.photos.search";
-	var api_key = "730f880c45aed14a1e0cee8ff851b4d2";
-	return baseUrl + "&" + "api_key=" + api_key + "&" + "user_id=" + flickrUserId + "&" + "per_page=" + imgBoxSize.square + "&" + "page=" + pageNum + "&format=rest";
+	
+	
 }
 
 function createOverlay () {

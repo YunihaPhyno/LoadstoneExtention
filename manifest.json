@@ -14,7 +14,12 @@
   "content_scripts": [
     {
       "matches": ["https://jp.finalfantasyxiv.com/lodestone/*"],
-      "js": ["jquery/jquery-3.2.1.min.js","classes/Debug.class.js","classes/Flickr.class.js","classes/ModalWindow.class.js","main.js"],
+      "js": ["jquery/jquery-3.2.1.min.js",
+              "classes/Debug.class.js",
+              "classes/Chrome.class.js",
+              "classes/Flickr.class.js",
+              "classes/ModalWindow.class.js",
+              "main.js"],
       "css": ["modal-test.css"],
       "run_at": "document_start"
     }
