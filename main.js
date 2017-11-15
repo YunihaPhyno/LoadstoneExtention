@@ -29,7 +29,7 @@ var selectBoxStatus;
 function main () {
 	// 実行を許可するページ
 	console.log(location.href);
-	if (!/my\/blog\/post\//.test(location.href) && !/freecompany\/[0-9]+\/forum\/post/.test(location.href)) {
+	if (!/my\/blog\/post\//.test(location.href) && !/freecompany\/[0-9]+\/forum\/post/.test(location.href) && !/freecompany\/[0-9]+\/forum\/[0-9]+\/comment\/post/.test(location.href)) {
 		return;
 	}
 
