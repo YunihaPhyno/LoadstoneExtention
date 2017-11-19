@@ -29,14 +29,14 @@ var selectBoxStatus;
 function main () {
 	// 実行を許可するページ
 	console.log(location.href);
-	if (!/my\/blog\/post\//.test(location.href) && !/freecompany\/[0-9]+\/forum\/post/.test(location.href) && !/freecompany\/[0-9]+\/forum\/[0-9]+\/comment\/post/.test(location.href)) {
+	if (!/my\/blog\/post\//.test(location.href) && !/my\/blog\/[0-9]+\/edit/.test(location.href) && !/freecompany\/[0-9]+\/forum\/post/.test(location.href) && !/freecompany\/[0-9]+\/forum\/[0-9]+\/comment\/post/.test(location.href) &&!/freecompany\/[0-9]+\/forum\/[0-9]+\/edit/.test(location.href)) {
 		return;
 	}
 
 	console.log("スクリプト実行開始");
 
 	//Chrome拡張のローカルストレージへアクセスリクエスト
-	chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum"], OnLoadOptions);
+	chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum", "title_diary", "title_forum"], OnLoadOptions);
 
 	//モーダルウィンドウの追加
 	createModalWindow();
@@ -53,16 +53,20 @@ function OnLoadOptions (response) {
 	flickrUserId = response["flickrUserId"];
 
 	if (/my\/blog\/post\//.test(location.href)){
-		insertFixedPhrase (response["fixedPhrase"]);
+		insertFixedPhrase (response["title_diary"],response["fixedPhrase"]);
 	} else if (/freecompany\/[0-9]+\/forum\/post/.test(location.href)) {
-		insertFixedPhrase (response["fixedPhraseFCForum"]);
+		insertFixedPhrase (response["title_forum"],response["fixedPhraseFCForum"]);
 	}
 	
 }
 
 
 //----------------定型文関係--------------------
-function insertFixedPhrase (text) {
+function insertFixedPhrase (title, text) {
+	if (!$("#input_title").val()) {
+		$("#input_title").val(title);
+	}
+
 	if (!$("#input_body").val()) {
 		$("#input_body").val(text);
 	}
