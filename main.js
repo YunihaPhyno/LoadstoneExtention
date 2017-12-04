@@ -26,7 +26,7 @@ var selectBoxStatus;
 
 // 実行を許可するページ
 
-function main () {
+function main_old () {
 	// 実行を許可するページ
 	console.log(location.href);
 	if (!/my\/blog\/post\//.test(location.href) && !/freecompany\/[0-9]+\/forum\/post/.test(location.href)) {
@@ -46,6 +46,11 @@ function main () {
 
 	//定型文の入力
 	insertFixedPhrase ();
+}
+
+
+function main () {
+
 }
 
 function OnLoadOptions (response) {
