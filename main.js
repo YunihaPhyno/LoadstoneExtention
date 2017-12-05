@@ -50,7 +50,8 @@ function main_old () {
 
 
 function main () {
-
+	console.log("スクリプト実行開始");
+	var flickrModal = new ModalWindow ("modalWindowFlickr", $("body"));
 }
 
 function OnLoadOptions (response) {
