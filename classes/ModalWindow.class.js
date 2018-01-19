@@ -18,7 +18,7 @@ class DocumentObjectBase {
 	}
 }
 
-class ModalWindow extends DocumentObjectBase {
+class FlickrWindows extends DocumentObjectBase {
 	// id : DOM id
 	// parent : jquery object
 	constructor (id, parent) {
@@ -33,7 +33,7 @@ class ModalWindow extends DocumentObjectBase {
 
 		// オーバーレイの作成
 		this.overlay = new ModalOverlay (this.root_,100009);
-		this.overlay.FadeIn();
+		this.overlay.FadeIn(); // test
 
 		// タイトル
 		//this.title_ = this.root.append ('<div id="' + this.id_ + "" + '"></div>');
@@ -42,6 +42,25 @@ class ModalWindow extends DocumentObjectBase {
 	CreateRoot_ () {
 		this.parent_.append ('<div id="' + this.id_ + '"></div>');
 		this.root_ = $(ID(this.id_));
+	}
+}
+
+// like Abstruct Class
+class ModalWindow {
+	constructor (parent) {
+		this.parent_ = parent;
+	}
+
+	CreateTitle_ (text) {
+		mordalWindow.append ('<h3 class="heading--lg parts__space--add">' + text + '</h3>');
+	}
+
+	CreateBody_ () {
+
+	}
+
+	CreateFootter_ (){
+
 	}
 }
 

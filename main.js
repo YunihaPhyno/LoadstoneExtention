@@ -51,7 +51,7 @@ function main_old () {
 
 function main () {
 	console.log("スクリプト実行開始");
-	var flickrModal = new ModalWindow ("modalWindowFlickr", $("body"));
+	var flickrModal = new FlickrWindows ("modalWindowFlickr", $("body"));
 }
 
 function OnLoadOptions (response) {
