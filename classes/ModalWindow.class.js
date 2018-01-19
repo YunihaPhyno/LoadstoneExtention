@@ -33,7 +33,7 @@ class ModalWindow extends DocumentObjectBase {
 
 		// オーバーレイの作成
 		this.overlay = new ModalOverlay (this.root_,100009);
-		this.overlay.Visible();
+		this.overlay.FadeIn();
 
 		// タイトル
 		//this.title_ = this.root.append ('<div id="' + this.id_ + "" + '"></div>');
@@ -53,7 +53,7 @@ class ModalOverlay {
 		this.Create_ (z_idx);
 
 		// アニメーション登録
-		this.root_.bind("click", {obj:this}, function (event){event.data.obj.Hidden()});
+		this.root_.bind("click", {obj:this}, function (event){event.data.obj.FadeOut()});
 	}
 
 	Create_ (z_idx) {
@@ -72,11 +72,11 @@ class ModalOverlay {
 		}
 	}
 
-	Visible () {
+	FadeIn () {
 		this.root_.fadeIn("slow");
 	}
 
-	Hidden () {
+	FadeOut () {
 		this.root_.fadeOut("slow");
 	}
 
