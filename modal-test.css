@@ -1,3 +1,17 @@
+/* #select_boxと同じ設定(select_boxのcssがid指定だったので移植) */
+.modal_overlay {
+    background-color: rgba(0,0,0,0.75);
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+}
+
+
+/*
 #modalWindowFlickr{
 	z-index:100022;
 	position: absolute;
@@ -11,7 +25,8 @@
     background-color: #383838;
     box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25) inset, 0px 1px 4px 0px rgba(0,0,0,0.25);
 }
-
+*/
+/*
 #modalOverlayFlickr{
 	z-index:100009;
 	display:none;
@@ -70,3 +85,4 @@
 #imgSelectBoxFlickr ul{
     margin: 10px;    
 }
+*/

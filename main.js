@@ -50,7 +50,8 @@ function main_old () {
 
 
 function main () {
-
+	console.log("スクリプト実行開始");
+	var flickrModal = new FlickrWindows ("modalWindowFlickr", $("body"));
 }
 
 function OnLoadOptions (response) {
@@ -62,7 +63,6 @@ function OnLoadOptions (response) {
 	} else if (/freecompany\/[0-9]+\/forum\/post/.test(location.href)) {
 		insertFixedPhrase (response["fixedPhraseFCForum"]);
 	}
-	
 }
 
 
@@ -225,31 +225,6 @@ function onClickFlickrButton () {
 function getFlickrAPIURL (pageNum) {
 	
 	
-}
-
-function createOverlay () {
-	//console.log ("createOverlay");
-	//新しくモーダルウィンドウを起動しない
-	if($("#" + overlayDomId)[0]) {
-		return false ;
-	}
-
-	//オーバーレイ用のHTMLコードを、[body]内の最後に生成する
-	$("body").append('<div id="' + overlayDomId + '"></div>');
-
-	$("#"+overlayDomId).click(onClickOverlay);
-}
-
-function onClickOverlay () {
-	//console.log ("onClickOverlay");
-	//フェードアウトさせる
-	$("#"+overlayDomId+",#"+modalWindowFlickrDomId).fadeOut("slow",afterFadeOutOverlay);
-}
-
-function afterFadeOutOverlay () {
-	//console.log ("afterFadeOutOverlay");
-	//フェードアウト後、[#modal-overlay]をHTML(DOM)上から削除
-	$("#"+overlayDomId).remove();
 }
 
 //センタリングをする関数
