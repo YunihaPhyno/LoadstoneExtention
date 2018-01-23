@@ -6,7 +6,7 @@
 * 機能単位でファイル分けを・・・
 * そもそもクラス化しましょう
 */
-console.log ("Loadstone Extension written by Yuniha Phyno.");
+console.log ("Lodestone Extension written by Yuniha Phyno.");
 
 (window.onload = main);
 var btnFlickrDOMId = "ButtonFlickr";
@@ -51,7 +51,7 @@ function main_old () {
 
 function main () {
 	console.log("スクリプト実行開始");
-	var flickrModal = new FlickrWindows ("modalWindowFlickr", $("body"));
+	var flickrModal = new FlickrWindows ("FlickrWindows", $("body"));
 }
 
 function OnLoadOptions (response) {
@@ -85,14 +85,16 @@ function createModalWindow () {
 	createPager (mordalWindow);
 }
 
+/*
 function createTitle (mordalWindow) {
 	//console.log ("createTitle");
 	mordalWindow.append ('<h3 class="heading--lg parts__space--add">画像を選択</h3>');
 }
+*/
 
 function createImageSelectBox (mordalWindow) {
 	//console.log ("createImageSelectBox");
-	mordalWindow.append ('<div id="' + imgSelectBoxDomId + '"><ul style="margin-left: ' + ((1000 - 120 * imgBoxSize.cols) / 2) + 'px;"></ul></div>');
+	
 	var imgSelectBox = $("#"+imgSelectBoxDomId);
 	for (var i = 0, length = imgBoxSize.rows*imgBoxSize.cols; i < length; i++) {
 		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');

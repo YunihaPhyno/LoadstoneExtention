@@ -32,35 +32,68 @@ class FlickrWindows extends DocumentObjectBase {
 		this.CreateRoot_ ();
 
 		// オーバーレイの作成
-		this.overlay = new ModalOverlay (this.root_,100009);
-		this.overlay.FadeIn(); // test
+		this.overlay_ = new ModalOverlay (this.root_,100009);
 
-		// タイトル
-		//this.title_ = this.root.append ('<div id="' + this.id_ + "" + '"></div>');
+		// メインウィンドウの作成
+		this.mainWindow_ = new FlickrImageSelectBox (this.root_,"画像を選択");
+
+		this.root_.fadeIn("slow"); // test
 	}
 
 	CreateRoot_ () {
-		this.parent_.append ('<div id="' + this.id_ + '"></div>');
+		this.parent_.append ('<div id="' + this.id_ + '" style="display:none;"></div>');
 		this.root_ = $(ID(this.id_));
 	}
 }
 
 // like Abstruct Class
 class ModalWindow {
-	constructor (parent) {
+	constructor (parent,title) {
 		this.parent_ = parent;
+
+		this.CreateRoot_ ();
+	}
+
+	CreateRoot_ () {
+		this.parent_.append ('<div class="modal_window"></div>');
+		this.root_ = this.parent_.children(".modal_window");
 	}
 
 	CreateTitle_ (text) {
-		mordalWindow.append ('<h3 class="heading--lg parts__space--add">' + text + '</h3>');
+		this.root_.append ('<h3 class="modal_window_title heading--lg parts__space--add">' + text + '</h3>');
+		this.title_ = this.root_.children (".modal_window_title");
 	}
 
-	CreateBody_ () {
-
+	CreateBody_() {
+		this.root_.append ('<div class="modal_window_body"></div>');
+		this.body_ = this.root_.children (".modal_window_body");
 	}
 
 	CreateFootter_ (){
 
+	}
+}
+
+class FlickrImageSelectBox extends ModalWindow {
+	constructor (parent,title) {
+		super (parent,title);
+
+		this.imgBoxRows = 4;
+		this.imgBoxCols = 8;
+
+		this.CreateTitle_ (title);
+		this.CreateBody_();
+
+	}
+
+	CreateBody_() {
+		super.CreateBody_ ();
+		this.body_.append('<ul style="margin-left: ' + ((1000 - 120 * this.imgBoxCols) / 2) + 'px;"></ul>');
+		var body_ul = this.body_.children ("ul");
+		for (var i = 0, length = this.imgBoxRows*this.imgBoxCols; i < length; i++) {
+			body_ul.append ('<li name="' + i + '"></li>');
+			//body_ul.children("li[name="+ i +"]").click(onClickImgSelectBox);
+		}
 	}
 }
 
@@ -72,11 +105,11 @@ class ModalOverlay {
 		this.Create_ (z_idx);
 
 		// アニメーション登録
-		this.root_.bind("click", {obj:this}, function (event){event.data.obj.FadeOut()});
+		this.root_.bind("click", {obj:this.parent_}, function (event){event.data.obj.fadeOut("slow")});
 	}
 
 	Create_ (z_idx) {
-		this.parent_.append ('<div class="modal_overlay" style="z-index: ' + z_idx + '; opacity: ' + this.max_opacity_ + '; display: none;"></div>');
+		this.parent_.append ('<div class="modal_overlay" style="z-index: ' + z_idx + '; opacity: ' + this.max_opacity_ + ';"></div>');
 		this.root_ = this.parent_.children (".modal_overlay");
 		Debug.log (this.root_);
 	}
@@ -90,14 +123,5 @@ class ModalOverlay {
 			
 		}
 	}
-
-	FadeIn () {
-		this.root_.fadeIn("slow");
-	}
-
-	FadeOut () {
-		this.root_.fadeOut("slow");
-	}
-
 }
 
