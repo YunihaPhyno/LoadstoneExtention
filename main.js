@@ -52,8 +52,44 @@ function main_old () {
 
 function main () {
 	console.log("スクリプト実行開始");
-	var flickrModal = new FlickrWindows ("FlickrWindows", $("body"));
-	setTimeout(function(flickrModal){flickrModal.FadeIn();},1000,flickrModal);
+	var flickrModalWindows = new FlickrWindows ("FlickrWindows", $("body"));
+	addFlickrButton (flickrModalWindows);
+}
+
+function addFlickrButton () {
+	//img_selectは遅延読み込みされるため読み込みを待つ
+	var title = $("#img_select");
+	if (!title) {
+		setTimeout(addFlickrButton,1000);
+	}
+
+	//DOM埋め込み
+	$('<ul><li><a href="javascript:void(0);" class="btn__color--radius" id=' + btnFlickrDOMId + '>Flickr画像を参照</a></li></ul>').insertAfter('#container>ul.upload__btn-2');
+
+	//クリックイベント埋め込み
+	//document.getElementById(btnFlickrDOMId).addEventListener("click", onClickFlickrButton, false);
+}
+
+function onClickFlickrButton () {
+	//console.log ("onClickFlickrButton");
+	//ボタンからフォーカスを外す
+	$(this).blur() ;
+
+	createOverlay ();
+
+	//フェードイン
+	$("#"+modalWindowFlickrDomId).fadeIn("slow");
+	$("#"+overlayDomId).fadeIn("slow");
+
+	centeringModalSyncer();
+
+	$("#embedfiles").click();
+
+	//画像リスト取得(コールバックで画像表示)
+	requestSearch(getFlickrAPIURL(1));
+
+	//アップロードファイルリストと同期をとる
+	syncUploadFileList ();
 }
 
 function OnLoadOptions (response) {
@@ -93,7 +129,7 @@ function createTitle (mordalWindow) {
 	mordalWindow.append ('<h3 class="heading--lg parts__space--add">画像を選択</h3>');
 }
 */
-
+/*
 function createImageSelectBox (mordalWindow) {
 	//console.log ("createImageSelectBox");
 	
@@ -103,7 +139,8 @@ function createImageSelectBox (mordalWindow) {
 		imgSelectBox.children("ul").children("li[name="+ i +"]").click(onClickImgSelectBox);
 	}
 }
-
+*/
+/*
 function createPager (mordalWindow) {
 	mordalWindow.append ('<div id="' +pagerDomId+ '"><ul class="btn__pager sys_upload_pager"></ul></div>');
 	var pager = $("#" + pagerDomId);
@@ -123,6 +160,7 @@ function createPager (mordalWindow) {
 	pager.ul.li.children(".btn__pager__next").click({type : "next"},onClickBtnPager);
 	pager.ul.li.children(".btn__pager__next--all").click({type : "next_all"},onClickBtnPager);
 }
+*/
 
 function onClickBtnPager (event) {
 	console.log (event.data.type);
@@ -188,43 +226,7 @@ function getFlickrImgUrl (photo) {
 }
 
 //----------------フリッカーボタン関係------------------
-function addFlickrButton () {
-	//console.log ("addFlickrButton");
 
-	//img_selectは遅延読み込みされるため読み込みを待つ
-	var title = $("#img_select");
-	if (!title) {
-		setTimeout(addFlickrButton,1000);
-	}
-
-	//DOM埋め込み
-	$('<ul><li><a href="javascript:void(0);" class="btn__color--radius" id=' + btnFlickrDOMId + '>Flickr画像を参照</a></li></ul>').insertAfter('#container>ul.upload__btn-2');
-
-	//クリックイベント埋め込み
-	document.getElementById(btnFlickrDOMId).addEventListener("click", onClickFlickrButton, false);
-}
-
-function onClickFlickrButton () {
-	//console.log ("onClickFlickrButton");
-	//ボタンからフォーカスを外す
-	$(this).blur() ;
-
-	createOverlay ();
-
-	//フェードイン
-	$("#"+modalWindowFlickrDomId).fadeIn("slow");
-	$("#"+overlayDomId).fadeIn("slow");
-
-	centeringModalSyncer();
-
-	$("#embedfiles").click();
-
-	//画像リスト取得(コールバックで画像表示)
-	requestSearch(getFlickrAPIURL(1));
-
-	//アップロードファイルリストと同期をとる
-	syncUploadFileList ();
-}
 
 function getFlickrAPIURL (pageNum) {
 	

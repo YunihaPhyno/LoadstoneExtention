@@ -141,10 +141,9 @@ class ModalPager {
 	}
 
 	AddButton (btnName,text) {
-		Debug.log (this.root_);
-		Debug.log (btnName + ":" + text);
+		//Debug.log (btnName + ":" + text);
 		this.root_.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__' + btnName + ' js__tooltip" data-tooltip="' + text + '"></a></li>');
-
+		//pager.ul.li.children(".btn__pager__" + btnName).click({type : btnName},onClickBtnPager);
 	}
 
 }

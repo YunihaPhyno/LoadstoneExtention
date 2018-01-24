@@ -10,8 +10,6 @@
     top: 0px;
 }
 
-
-
 .modal_window{
 	z-index:100022;
 	position: absolute;
@@ -22,7 +20,6 @@
     background-color: #383838;
     box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25) inset, 0px 1px 4px 0px rgba(0,0,0,0.25);
 }
-
 
 #FlickrWindows .modal_window_body li{
 	cursor:pointer;

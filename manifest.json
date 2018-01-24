@@ -19,6 +19,7 @@
               "classes/Chrome.class.js",
               "classes/Flickr.class.js",
               "classes/ModalWindow.class.js",
+              "classes/FlickrButton.class.js",
               "main.js"],
       "css": ["modal-test.css"],
       "run_at": "document_start"
