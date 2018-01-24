@@ -41,8 +41,8 @@ class FlickrWindows extends DocumentObjectBase {
 		this.mainWindow_ = new FlickrImageSelectBox (this.root_,"画像を選択");
 	}
 
+	// FlickrWindowsをfadeinするとなんか変な感じになる
 	FadeIn (option, callBack) {
-		Debug.log (option);
 		this.overlay_.FadeIn(option);
 		this.mainWindow_.FadeIn(option, callBack);//コールバックは一回だけ呼ばれる
 		this.mainWindow_.HorizontalAlignCenterOnce ();
