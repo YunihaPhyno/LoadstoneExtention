@@ -36,8 +36,12 @@ class FlickrWindows extends DocumentObjectBase {
 
 		// メインウィンドウの作成
 		this.mainWindow_ = new FlickrImageSelectBox (this.root_,"画像を選択");
+	}
 
-		this.root_.fadeIn("slow"); // test
+	FadeIn () {
+		this.root_.fadeIn("slow");
+		this.mainWindow_.AlignHorizontalCenter ();
+		this.mainWindow_.AlignTop ();
 	}
 
 	CreateRoot_ () {
@@ -56,7 +60,7 @@ class ModalWindow {
 
 	CreateRoot_ () {
 		this.parent_.append ('<div class="modal_window"></div>');
-		this.root_ = this.parent_.children(".modal_window");
+		this.root_ = this.parent_.children (".modal_window");
 	}
 
 	CreateTitle_ (text) {
@@ -71,6 +75,21 @@ class ModalWindow {
 
 	CreateFootter_ (){
 
+	}
+
+	AlignHorizontalCenter () {
+		var window_obj = $(window);
+		var window_width = window_obj.width ();
+		
+		var mordal_width = this.root_.outerWidth ();
+		
+		var center = (window_width - mordal_width) / 2;
+		this.root_.css("left", center + "px");
+	}
+
+	AlignTop () {
+		var center = $(window).scrollTop();
+		this.root_.css("top", center + "px");
 	}
 }
 
@@ -111,7 +130,6 @@ class ModalOverlay {
 	Create_ (z_idx) {
 		this.parent_.append ('<div class="modal_overlay" style="z-index: ' + z_idx + '; opacity: ' + this.max_opacity_ + ';"></div>');
 		this.root_ = this.parent_.children (".modal_overlay");
-		Debug.log (this.root_);
 	}
 
 	SetActive_ (flag) {

@@ -49,9 +49,11 @@ function main_old () {
 }
 
 
+
 function main () {
 	console.log("スクリプト実行開始");
 	var flickrModal = new FlickrWindows ("FlickrWindows", $("body"));
+	setTimeout(function(flickrModal){flickrModal.FadeIn();},1000,flickrModal);
 }
 
 function OnLoadOptions (response) {
