@@ -53,7 +53,8 @@ function main_old () {
 function main () {
 	console.log("スクリプト実行開始");
 	var flickrModalWindows = new FlickrWindows ("FlickrWindows", $("body"));
-	addFlickrButton (flickrModalWindows);
+	var flickrButton = new FlickrButton ();
+	flickrButton.SetClickEvent ({modalWindow:flickrModalWindows}, function (event) {event.data.modalWindow.FadeIn();});
 }
 
 function addFlickrButton () {
@@ -64,7 +65,6 @@ function addFlickrButton () {
 	}
 
 	//DOM埋め込み
-	$('<ul><li><a href="javascript:void(0);" class="btn__color--radius" id=' + btnFlickrDOMId + '>Flickr画像を参照</a></li></ul>').insertAfter('#container>ul.upload__btn-2');
 
 	//クリックイベント埋め込み
 	//document.getElementById(btnFlickrDOMId).addEventListener("click", onClickFlickrButton, false);
