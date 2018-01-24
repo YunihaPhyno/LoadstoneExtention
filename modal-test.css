@@ -23,7 +23,8 @@
     box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25) inset, 0px 1px 4px 0px rgba(0,0,0,0.25);
 }
 
-#FlickrWindows li{
+
+#FlickrWindows .modal_window_body li{
 	cursor:pointer;
 	position:relative;
 	float:left;
@@ -34,9 +35,9 @@
 	list-style: none;
 	margin-bottom: 10px;
 	text-align: center;
-
 }
 
+/*
 #FlickrWindows li:before{
     content:"";
     display: inline-block;

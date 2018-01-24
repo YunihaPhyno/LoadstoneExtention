@@ -40,8 +40,8 @@ class FlickrWindows extends DocumentObjectBase {
 
 	FadeIn () {
 		this.root_.fadeIn("slow");
-		this.mainWindow_.AlignHorizontalCenter ();
-		this.mainWindow_.AlignTop ();
+		this.mainWindow_.HorizontalAlignCenterOnce ();
+		this.mainWindow_.VerticalAlignTopOnce ();
 	}
 
 	CreateRoot_ () {
@@ -59,7 +59,7 @@ class ModalWindow {
 	}
 
 	CreateRoot_ () {
-		this.parent_.append ('<div class="modal_window"></div>');
+		this.parent_.append ('<div class="modal_window sys_img_select_box" style="z-index: 100022;"></div>');
 		this.root_ = this.parent_.children (".modal_window");
 	}
 
@@ -73,11 +73,9 @@ class ModalWindow {
 		this.body_ = this.root_.children (".modal_window_body");
 	}
 
-	CreateFootter_ (){
+	CreateFootter_ (){}
 
-	}
-
-	AlignHorizontalCenter () {
+	HorizontalAlignCenterOnce () {
 		var window_obj = $(window);
 		var window_width = window_obj.width ();
 		
@@ -87,7 +85,7 @@ class ModalWindow {
 		this.root_.css("left", center + "px");
 	}
 
-	AlignTop () {
+	VerticalAlignTopOnce () {
 		var center = $(window).scrollTop();
 		this.root_.css("top", center + "px");
 	}
@@ -101,23 +99,61 @@ class FlickrImageSelectBox extends ModalWindow {
 		this.imgBoxCols = 8;
 
 		this.CreateTitle_ (title);
-		this.CreateBody_();
+		this.CreateBody_ ();
+		this.CreateFootter_ ();
 
+		// 常に水平センタリング
+		$(window).bind("resize", {obj:this}, function (event){event.data.obj.HorizontalAlignCenterOnce();})
 	}
 
 	CreateBody_() {
 		super.CreateBody_ ();
-		this.body_.append('<ul style="margin-left: ' + ((1000 - 120 * this.imgBoxCols) / 2) + 'px;"></ul>');
+		this.body_.append('<ul class="modal_window_body" style="margin-left: ' + ((1000 - 120 * this.imgBoxCols) / 2) + 'px;"></ul>');
 		var body_ul = this.body_.children ("ul");
 		for (var i = 0, length = this.imgBoxRows*this.imgBoxCols; i < length; i++) {
 			body_ul.append ('<li name="' + i + '"></li>');
 			//body_ul.children("li[name="+ i +"]").click(onClickImgSelectBox);
 		}
 	}
+
+	CreateFootter_ () {
+		this.pager_ = new ModalPager (this.root_);
+	}
 }
 
+//ModalWindowの内部で使うクラス
+class ModalPager {
+	constructor (parent) {
+		Debug.log (parent);
+		this.parent_ = parent;
+		this.Create_ ();
+	}
+
+	Create_ () {
+		this.parent_.append ('<div><ul class="btn__pager sys_upload_pager"></ul></div>');
+		this.root_ = this.parent_.children("div").children (".btn__pager");
+		this.AddButton ("prev--all","先頭へ");
+		this.AddButton ("prev","前へ");
+		this.root_.append('<li class="btn__pager__current sys_current_page" page_num=0 page_max=0>0ページ / 0ページ</li>');
+		this.AddButton ("next","次へ");
+		this.AddButton ("next--all","最後へ");
+
+	}
+
+	AddButton (btnName,text) {
+		Debug.log (this.root_);
+		Debug.log (btnName + ":" + text);
+		this.root_.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__' + btnName + ' js__tooltip" data-tooltip="' + text + '"></a></li>');
+
+	}
+
+}
+
+//ModalWindowの背後において画面を暗くする透過スクリーン
 class ModalOverlay {
 	// parent : jquery object
+	// z_idx : cssのz-index
+	// max_opac : 最大透過度
 	constructor (parent,z_idx,max_opac = 0.6) {
 		this.parent_ = parent;
 		this.max_opacity_ = max_opac;
@@ -130,16 +166,6 @@ class ModalOverlay {
 	Create_ (z_idx) {
 		this.parent_.append ('<div class="modal_overlay" style="z-index: ' + z_idx + '; opacity: ' + this.max_opacity_ + ';"></div>');
 		this.root_ = this.parent_.children (".modal_overlay");
-	}
-
-	SetActive_ (flag) {
-		if (flag) {
-			this.root_.css ("visibility", "visible");
-		} 
-
-		else {
-			
-		}
 	}
 }
 
