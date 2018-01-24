@@ -54,9 +54,10 @@ function main () {
 	console.log("スクリプト実行開始");
 	var flickrModalWindows = new FlickrWindows ("FlickrWindows", $("body"));
 	var flickrButton = new FlickrButton ();
-	flickrButton.SetClickEvent ({modalWindow:flickrModalWindows}, function (event) {event.data.modalWindow.FadeIn();});
+	flickrButton.SetClickEvent ({modalWindow:flickrModalWindows}, function (event) {event.data.modalWindow.FadeIn("slow");});
 }
 
+/*
 function addFlickrButton () {
 	//img_selectは遅延読み込みされるため読み込みを待つ
 	var title = $("#img_select");
@@ -69,8 +70,10 @@ function addFlickrButton () {
 	//クリックイベント埋め込み
 	//document.getElementById(btnFlickrDOMId).addEventListener("click", onClickFlickrButton, false);
 }
+*/
 
 function onClickFlickrButton () {
+/*
 	//console.log ("onClickFlickrButton");
 	//ボタンからフォーカスを外す
 	$(this).blur() ;
@@ -82,7 +85,7 @@ function onClickFlickrButton () {
 	$("#"+overlayDomId).fadeIn("slow");
 
 	centeringModalSyncer();
-
+*/
 	$("#embedfiles").click();
 
 	//画像リスト取得(コールバックで画像表示)

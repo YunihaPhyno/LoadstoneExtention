@@ -32,20 +32,30 @@ class FlickrWindows extends DocumentObjectBase {
 		this.CreateRoot_ ();
 
 		// オーバーレイの作成
-		this.overlay_ = new ModalOverlay (this.root_,100009);
+		this.overlay_ = new ModalOverlay (this.root_,100022);
+
+		// オーバーレイをクリックしたら閉じる
+		this.overlay_.SetClickEvent({obj:this}, function (event){event.data.obj.FadeOut("slow")});
 
 		// メインウィンドウの作成
 		this.mainWindow_ = new FlickrImageSelectBox (this.root_,"画像を選択");
 	}
 
-	FadeIn () {
-		this.root_.fadeIn("slow");
+	FadeIn (option, callBack) {
+		Debug.log (option);
+		this.overlay_.FadeIn(option);
+		this.mainWindow_.FadeIn(option, callBack);//コールバックは一回だけ呼ばれる
 		this.mainWindow_.HorizontalAlignCenterOnce ();
 		this.mainWindow_.VerticalAlignTopOnce ();
 	}
 
+	FadeOut (option, callBack) {
+		this.overlay_.FadeOut(option);
+		this.mainWindow_.FadeOut(option, callBack);
+	}
+
 	CreateRoot_ () {
-		this.parent_.append ('<div id="' + this.id_ + '" style="display:none;"></div>');
+		this.parent_.append ('<div id="' + this.id_ + '"></div>');
 		this.root_ = $(ID(this.id_));
 	}
 }
@@ -59,7 +69,7 @@ class ModalWindow {
 	}
 
 	CreateRoot_ () {
-		this.parent_.append ('<div class="modal_window sys_img_select_box" style="z-index: 100022;"></div>');
+		this.parent_.append ('<div class="modal_window sys_img_select_box" style="z-index: 100022; display:none;"></div>');
 		this.root_ = this.parent_.children (".modal_window");
 	}
 
@@ -88,6 +98,15 @@ class ModalWindow {
 	VerticalAlignTopOnce () {
 		var center = $(window).scrollTop();
 		this.root_.css("top", center + "px");
+	}
+
+	FadeOut (option, callBack) {
+		Debug.log(option);
+		this.root_.fadeOut(option,callBack);
+	}
+
+	FadeIn (option, callBack) {
+		this.root_.fadeIn(option, callBack);
 	}
 }
 
@@ -157,14 +176,24 @@ class ModalOverlay {
 		this.parent_ = parent;
 		this.max_opacity_ = max_opac;
 		this.Create_ (z_idx);
-
-		// アニメーション登録
-		this.root_.bind("click", {obj:this.parent_}, function (event){event.data.obj.fadeOut("slow")});
 	}
 
 	Create_ (z_idx) {
-		this.parent_.append ('<div class="modal_overlay" style="z-index: ' + z_idx + '; opacity: ' + this.max_opacity_ + ';"></div>');
+		this.parent_.append ('<div class="modal_overlay" style="z-index: ' + z_idx + '; opacity: ' + this.max_opacity_ + '; display:none;"></div>');
 		this.root_ = this.parent_.children (".modal_overlay");
 	}
+
+	SetClickEvent (objects,callBack) {
+		this.root_.bind ("click", objects, callBack);
+	}
+
+	FadeOut (option, callBack) {
+		this.root_.fadeOut(option,callBack);
+	}
+
+	FadeIn (option, callBack) {
+		this.root_.fadeIn(option, callBack);
+	}
+
 }
 
