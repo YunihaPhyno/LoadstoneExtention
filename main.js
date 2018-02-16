@@ -61,44 +61,6 @@ function main () {
 	);
 }
 
-/*
-function addFlickrButton () {
-	//img_selectは遅延読み込みされるため読み込みを待つ
-	var title = $("#img_select");
-	if (!title) {
-		setTimeout(addFlickrButton,1000);
-	}
-
-	//DOM埋め込み
-
-	//クリックイベント埋め込み
-	//document.getElementById(btnFlickrDOMId).addEventListener("click", onClickFlickrButton, false);
-}
-*/
-
-function onClickFlickrButton () {
-/*
-	//console.log ("onClickFlickrButton");
-	//ボタンからフォーカスを外す
-	$(this).blur() ;
-
-	createOverlay ();
-
-	//フェードイン
-	$("#"+modalWindowFlickrDomId).fadeIn("slow");
-	$("#"+overlayDomId).fadeIn("slow");
-
-	centeringModalSyncer();
-*/
-	$("#embedfiles").click();
-
-	//画像リスト取得(コールバックで画像表示)
-	requestSearch(getFlickrAPIURL(1));
-
-	//アップロードファイルリストと同期をとる
-	syncUploadFileList ();
-}
-
 function OnLoadOptions (response) {
 	console.log (response);
 	flickrUserId = response["flickrUserId"];
@@ -119,56 +81,6 @@ function insertFixedPhrase (text) {
 }
 
 //----------------モーダルウィンドウ関係--------------------
-function createModalWindow () {
-	//console.log ("createModalWindow");
-	//DOMの追加
-	$("body").append('<div id="' + modalWindowFlickrDomId + '"></div>');
-	//$("body").append('<div id="' + modalWindowFlickrDomId + '" class="sys_img_select_box" style="opacity: 1; position: absolute; top: 166px; left: 642.5px;"><ul class="upload__list clearfix sys__upload__list"></ul><ul class="btn__pager sys_upload_pager"><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev--all js__tooltip" data-tooltip="先頭へ"></a></li><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev js__tooltip" data-tooltip="前へ"></a></li><li class="btn__pager__current sys_current_page"></li><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next js__tooltip" data-tooltip="次へ"></a></li><li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next--all js__tooltip" data-tooltip="最後へ"></a></li></ul><a href="javascript:void(0);" class="btn__color--radius parts__space--reset sys_upload_submit">選択画像で決定</a></div>');
-	var mordalWindow = $("#" + modalWindowFlickrDomId);
-	createTitle (mordalWindow);
-	createImageSelectBox (mordalWindow);
-	createPager (mordalWindow);
-}
-
-/*
-function createTitle (mordalWindow) {
-	//console.log ("createTitle");
-	mordalWindow.append ('<h3 class="heading--lg parts__space--add">画像を選択</h3>');
-}
-*/
-/*
-function createImageSelectBox (mordalWindow) {
-	//console.log ("createImageSelectBox");
-	
-	var imgSelectBox = $("#"+imgSelectBoxDomId);
-	for (var i = 0, length = imgBoxSize.rows*imgBoxSize.cols; i < length; i++) {
-		imgSelectBox.children("ul").append ('<li name="' + i + '"></li>');
-		imgSelectBox.children("ul").children("li[name="+ i +"]").click(onClickImgSelectBox);
-	}
-}
-*/
-/*
-function createPager (mordalWindow) {
-	mordalWindow.append ('<div id="' +pagerDomId+ '"><ul class="btn__pager sys_upload_pager"></ul></div>');
-	var pager = $("#" + pagerDomId);
-
-	// append children
-	pager.ul = pager.children("ul");
-	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev--all js__tooltip" data-tooltip="先頭へ"></a></li>');
-	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__prev js__tooltip" data-tooltip="前へ"></a></li>');
-	pager.ul.append('<li class="btn__pager__current sys_current_page" page_num=0 page_max=0>0ページ / 0ページ</li>');
-	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next js__tooltip" data-tooltip="次へ"></a></li>');
-	pager.ul.append('<li><a href="javascript:void(0);" class="icon-list__pager btn__pager__next--all js__tooltip" data-tooltip="最後へ"></a></li>');
-	
-	pager.ul.li = pager.ul.children("li");
-	// set click event
-	pager.ul.li.children(".btn__pager__prev--all").click({type : "prev_all"},onClickBtnPager);
-	pager.ul.li.children(".btn__pager__prev").click({type : "prev"},onClickBtnPager);
-	pager.ul.li.children(".btn__pager__next").click({type : "next"},onClickBtnPager);
-	pager.ul.li.children(".btn__pager__next--all").click({type : "next_all"},onClickBtnPager);
-}
-*/
-
 function onClickBtnPager (event) {
 	console.log (event.data.type);
 
@@ -228,34 +140,6 @@ function updatePager (currentPagesNum, maxPagesNum) {
 }
 
 //----------------フリッカーボタン関係------------------
-
-/*
-//センタリングをする関数
-function centeringModalSyncer(){
-	//console.log ("centeringModalSyncer");
-	//ウィンドウサイズ
-	var windowHeight = $(window).height();
-	var windowWidth = $(window).width();
-
-	//モーダルウィンドウのサイズ
-	var modalWindow = $("#"+modalWindowFlickrDomId);
-	var modalHeight = $("#"+modalWindowFlickrDomId).outerHeight(true);
-	var modalWidth = $("#"+modalWindowFlickrDomId).outerWidth(true);
-
-	//コンテンツ(#modal-content)を真ん中に配置するのに、左端から何ピクセル離せばいいか？を計算して、変数[pxleft]に格納
-	var pxleft = ((windowWidth - modalWidth)/2);
-	var pxtop = $(window).scrollTop() - modalHeight * 2 + 30;//((windowHeight - modalHeight)/2);
-
-	//console.log($(window).scrollTop());
-
-	//[#modal-content]のCSSに[left]の値(pxleft)を設定
-	modalWindow.css({"left": pxleft + "px"});
-	//modalWindow.css({"top": pxtop + "px"});
-	modalWindow.css({"top": 50 + "%"});
-
-}
-*/
-
 function getResults(data) {
 	//console.log ("getResults");
 	flickrPhotos = data.getElementsByTagName('photo');

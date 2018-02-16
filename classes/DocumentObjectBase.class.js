@@ -1,6 +1,10 @@
 // あくまでLODESTONE上で動作する
 Debug.log("load:DocumentObjectBase.class.js");
 
+function ID (id) {
+	return "#" + id;
+}
+
 // like Abstruct Class
 class DocumentObjectBase {
 

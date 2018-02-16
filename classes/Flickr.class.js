@@ -19,7 +19,6 @@ class NetworkApi {
 			if ((ajax.status >= 200 && ajax.status < 300) || (ajax.status == 304)) {
 				data = ajax.responseXML;
 				if (data != null) {
-					Debug.log (this);
 					this.onfinishedcallback (data);
 				} else {
 					Debug.log ("Data was not received");

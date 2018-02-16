@@ -65,7 +65,7 @@ class FlickrImageSelectBox extends ModalWindow {
 		this.CreateFooter_ ();
 
 		// FlickrApiの初期化
-		this.flickrApi = new FlickrApi ("152412377@N03",8 * 4);
+		this.flickrApi = new FlickrApi ("152412377@N03",this.imgBoxRows * this.imgBoxCols);
 
 		// 常に水平センタリング
 		$(window).bind("resize", {obj:this}, function (event){event.data.obj.HorizontalAlignCenterOnce();});
@@ -86,17 +86,26 @@ class FlickrImageSelectBox extends ModalWindow {
 	}
 
 	CreateFooter_ () {
-		this.pager_ = new ModalPager (this.root_);
+		this.pager_ = new ModalPager (this.root_,this.Reload.bind(this));
 	}
 
 	Reload (pageNum) {
+		this.Clear ();
 		this.flickrApi.Request (pageNum,this.OnloadCallback_.bind(this));
+	}
+
+	Clear () {
+		for (var i = 0; i < this.body_.imgBoxList.length; i++) {
+			var curr = $(this.body_.imgBoxList[i]).children('img');
+			curr.attr('src',"");
+		}
 	}
 
 	OnloadCallback_ (xmldata) {
 		var imageUrls = FlickrApi.Xml2UrlArray (xmldata);
 		this.SetImages_ (imageUrls);
 		this.SyncUploadFileList();
+		this.pager_.SetPage (Number(xmldata.getElementsByTagName('photos')[0].getAttribute('page')),Number(xmldata.getElementsByTagName('photos')[0].getAttribute('pages')));
 	}
 
 	SetImages_ (imageUrls) {
@@ -110,6 +119,20 @@ class FlickrImageSelectBox extends ModalWindow {
 		}
 	}
 
+	//アップロードファイルリストと同期をとる
+	SyncUploadFileList () {
+		var selectBoxList = this.body_.imgBoxList;
+		for (var i = 0; i < selectBoxList.length; i++) {
+			var selectBox = $(selectBoxList[i]);
+			var url = selectBox.children('img').attr('src');
+			$(selectBox).attr("class", "");
+			if (FlickrImageSelectBox.IsListed(url)) {
+				$(selectBox).attr("class", "flame check");	
+			}
+		}
+	}
+
+	// -------- static Methods --------
 	// クリックされたときのコールバック
 	// @param this:クリックされたオブジェクト
 	// @param self:コールバック登録時にバインドされたthis
@@ -135,7 +158,6 @@ class FlickrImageSelectBox extends ModalWindow {
 		$("#external_file_select").click();
 	}
 
-	
 	static RemoveImage (url) {
 		Debug.log("remove:"+url);
 		//urlがあるリストアイテムの「×」ボタンを押す
@@ -155,18 +177,5 @@ class FlickrImageSelectBox extends ModalWindow {
 			}
 		}
 		return false;
-	}
-
-	//アップロードファイルリストと同期をとる
-	SyncUploadFileList () {
-		var selectBoxList = this.body_.imgBoxList;
-		for (var i = 0; i < selectBoxList.length; i++) {
-			var selectBox = $(selectBoxList[i]);
-			var url = selectBox.children('img').attr('src');
-			$(selectBox).attr("class", "");
-			if (FlickrImageSelectBox.IsListed(url)) {
-				$(selectBox).attr("class", "flame check");	
-			}
-		}
 	}
 }
