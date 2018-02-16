@@ -54,7 +54,11 @@ function main () {
 	console.log("スクリプト実行開始");
 	var flickrModalWindows = new FlickrWindows ("FlickrWindows", $("body"));
 	var flickrButton = new FlickrButton ();
-	flickrButton.SetClickEvent ({modalWindow:flickrModalWindows}, function (event) {event.data.modalWindow.FadeIn("slow");});
+	flickrButton.SetClickEvent ({modalWindow:flickrModalWindows}, 
+		function (event) {
+			event.data.modalWindow.Open ();
+		}
+	);
 }
 
 /*
@@ -236,6 +240,7 @@ function getFlickrAPIURL (pageNum) {
 	
 }
 
+/*
 //センタリングをする関数
 function centeringModalSyncer(){
 	//console.log ("centeringModalSyncer");
@@ -260,28 +265,21 @@ function centeringModalSyncer(){
 	modalWindow.css({"top": 50 + "%"});
 
 }
+*/
 
+/*
 function requestSearch(uri) {
 	//console.log ("requestSearch");
 	var ajax = new XMLHttpRequest();
 	ajax.onreadystatechange = readyStateChange;
 	ajax.open('GET', uri, true);
 	ajax.send(null);
-	
 }
+*/
 
 function readyStateChange(event) {
 	//console.log ("readyStateChange");
-	var ajax = event.target;
-	var data = null;
-	if (ajax.readyState == 4) {
-		if ((ajax.status >= 200 && ajax.status < 300) || (ajax.status == 304)) {
-			data = ajax.responseXML;
-			if (data != null) {
-				getResults(data);
-			}
-		}
-	}
+
 }
 
 function getResults(data) {

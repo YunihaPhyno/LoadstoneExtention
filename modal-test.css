@@ -34,7 +34,7 @@
 	text-align: center;
 }
 
-/*
+
 #FlickrWindows li:before{
     content:"";
     display: inline-block;
@@ -56,8 +56,8 @@
     -webkit-background-size: 32px 32px;
     background-size: 32px 32px;
 }
-/*
-#imgSelectBoxFlickr img{
+
+#FlickrWindows img{
     width:auto;
     height:auto;
     max-width:100%;
@@ -65,7 +65,6 @@
     vertical-align: middle;
 }
 
-#imgSelectBoxFlickr ul{
+#FlickrWindows ul{
     margin: 10px;    
 }
-*/
