@@ -52,4 +52,18 @@ class FlickrApi {
 	static GetApiKey () {
 		return "730f880c45aed14a1e0cee8ff851b4d2";
 	}
+
+	static GetFlickrImgUrl (photo) {
+		return "http://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +"_h.jpg";
+	}
+
+	static Xml2UrlArray (xmldata) {
+		var photos = xmldata.getElementsByTagName('photo');
+		var urlArray = new Array (photos.length);
+		for (var i = 0; i < urlArray.length; i++) {
+			urlArray [i] = FlickrApi.GetFlickrImgUrl (photos[i]);
+		}
+
+		return urlArray;
+	}
 }

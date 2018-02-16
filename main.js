@@ -227,18 +227,7 @@ function updatePager (currentPagesNum, maxPagesNum) {
 	}
 }
 
-function getFlickrImgUrl (photo) {
-	//console.log ("getFlickrImgUrl");
-	return "http://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +"_h.jpg";
-}
-
 //----------------フリッカーボタン関係------------------
-
-
-function getFlickrAPIURL (pageNum) {
-	
-	
-}
 
 /*
 //センタリングをする関数
@@ -267,21 +256,6 @@ function centeringModalSyncer(){
 }
 */
 
-/*
-function requestSearch(uri) {
-	//console.log ("requestSearch");
-	var ajax = new XMLHttpRequest();
-	ajax.onreadystatechange = readyStateChange;
-	ajax.open('GET', uri, true);
-	ajax.send(null);
-}
-*/
-
-function readyStateChange(event) {
-	//console.log ("readyStateChange");
-
-}
-
 function getResults(data) {
 	//console.log ("getResults");
 	flickrPhotos = data.getElementsByTagName('photo');
@@ -292,64 +266,7 @@ function getResults(data) {
 	syncUploadFileList();
 }
 	
-function setImgToImgSelectBox () {
-	//console.log ("setImgToImgSelectBox");
-	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
-	console.log (flickrPhotos.length);
-	for (var i = 0; i < selectBoxList.length; i++) {
-		$(selectBoxList[i]).children("img").remove();
-		if (i < flickrPhotos.length) {
-			$(selectBoxList[i]).append($("<img>").attr("src", getFlickrImgUrl (flickrPhotos[i])));
-		}
-	}
-	selectBoxStatus = new Array(selectBoxList.length);
-}
 
-function onClickImgSelectBox () {
-	//console.log ("onClickImgSelectBox");
-	var selectBox = $(this);
-	selectBox.blur();
-	var id = Number(selectBox.attr("name"));
-	var url = selectBox.children("img").attr("src");
 
-	//同期がちゃんととれていれば選択されていないときclassは空になる
-	if (selectBox.attr("class") == "") {
-		//テキストボックスにurlを追加して「参照」ボタンを押す
-		$("#external_file_uri").val(url);
-		$("#external_file_select").click();
-	} else {
-		//自分のurlがあるリストアイテムの「×」ボタンを押す
-		deleteSelectedFile (url);
-	}
 
-	//アップロードファイルリストと同期をとる
-	syncUploadFileList();
-}
-
-//アップロードファイルリストと同期をとる
-function syncUploadFileList () {
-	var selectBoxList = $("#" + imgSelectBoxDomId).children("ul").children('li');
-	var uploadFileList = $("#sys_upload__status>ul");
-	for (var i = 0; i < selectBoxList.length; i++) {
-		var selectBox = $(selectBoxList[i]);
-		var url = selectBox.children('img').attr('src');
-		$(selectBox).attr("class", "");
-		for (var j = 0; j < uploadFileList.length; j++) {
-			if (uploadFileList[j].childNodes[1].innerHTML == url) {
-				$(selectBox).attr("class", "flame check");
-				break;
-			}
-		}
-	}
-}
-
-//urlがあるリストアイテムの「×」ボタンを押す
-function deleteSelectedFile (url) {
-	var uploadFileList = $("#sys_upload__status>ul");
-	for (var i = 0; i < uploadFileList.length; i++) {
-		if (uploadFileList[i].childNodes[1].innerHTML == url) {
-			uploadFileList[i].childNodes[3].childNodes[0].click();
-		}
-	}
-}
 

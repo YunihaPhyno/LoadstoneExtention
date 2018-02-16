@@ -51,6 +51,9 @@ class FlickrWindows extends DocumentObjectBase {
 
 
 class FlickrImageSelectBox extends ModalWindow {
+	// @members
+	// this.body_.imgBoxList = this.body_.children("ul").children("li");
+
 	constructor (parent,title) {
 		super (parent,title);
 
@@ -59,7 +62,7 @@ class FlickrImageSelectBox extends ModalWindow {
 
 		this.CreateTitle_ (title);
 		this.CreateBody_ ();
-		this.CreateFootter_ ();
+		this.CreateFooter_ ();
 
 		// FlickrApiの初期化
 		this.flickrApi = new FlickrApi ("152412377@N03",8 * 4);
@@ -73,13 +76,16 @@ class FlickrImageSelectBox extends ModalWindow {
 		this.body_.append('<ul class="modal_window_body" style="margin-left: ' + ((1000 - 120 * this.imgBoxCols) / 2) + 'px;"></ul>');
 		var body_ul = this.body_.children ("ul");
 		for (var i = 0, length = this.imgBoxRows*this.imgBoxCols; i < length; i++) {
-			body_ul.append ('<li name="' + i + '" class="js__images"><img class=></li>');
-			//body_ul.children("li[name="+ i +"]").click(onClickImgSelectBox);
+			body_ul.append ('<li name="' + i + '" class=""><img class=""></li>');
+
+			// コールバックでthisが呼び出せないのでselfで呼び出せるようにする
+			var self = this;
+			body_ul.children("li[name="+ i +"]").bind("click", {self:this}, FlickrImageSelectBox.OnClickBox);
 		}
 		this.body_.imgBoxList = this.body_.children("ul").children("li");
 	}
 
-	CreateFootter_ () {
+	CreateFooter_ () {
 		this.pager_ = new ModalPager (this.root_);
 	}
 
@@ -88,9 +94,12 @@ class FlickrImageSelectBox extends ModalWindow {
 	}
 
 	OnloadCallback_ (xmldata) {
-		var imageUrls = this.Xml2UrlArray_ (xmldata);
+		var imageUrls = FlickrApi.Xml2UrlArray (xmldata);
 		this.SetImages_ (imageUrls);
+		this.SyncUploadFileList();
+	}
 
+	SetImages_ (imageUrls) {
 		for (var i = 0; i < this.body_.imgBoxList.length; i++) {
 			var curr = $(this.body_.imgBoxList[i]).children('img');
 			if (i < imageUrls.length) {
@@ -101,23 +110,63 @@ class FlickrImageSelectBox extends ModalWindow {
 		}
 	}
 
-	SetImages_ (imageUrls) {
-		Debug.log (this.body_.imgBoxList);
+	// クリックされたときのコールバック
+	// @param this:クリックされたオブジェクト
+	// @param self:コールバック登録時にバインドされたthis
+	static OnClickBox (event) {
+		var selectBox = $(this);
+		selectBox.blur();
+		var id = Number(selectBox.attr("name"));
+		var url = selectBox.children("img").attr("src");
 
-	}
-
-	GetFlickrImgUrl (photo) {
-		return "http://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +"_h.jpg";
-	}
-
-	Xml2UrlArray_ (xmldata) {
-		var photos = xmldata.getElementsByTagName('photo');
-		var urlArray = new Array (photos.length);
-		for (var i = 0; i < urlArray.length; i++) {
-			urlArray [i] = this.GetFlickrImgUrl (photos[i]);
+		if (!FlickrImageSelectBox.IsListed(url)) {	//同期がちゃんととれていれば選択されていないときclassは空になる
+			FlickrImageSelectBox.AddImage (url);
+		} else {
+			FlickrImageSelectBox.RemoveImage (url);
 		}
 
-		return urlArray;
+		event.data.self.SyncUploadFileList();
 	}
 
+	static AddImage (url) {
+		Debug.log("add:"+url);
+		//テキストボックスにurlを追加して「参照」ボタンを押す
+		$("#external_file_uri").val(url);
+		$("#external_file_select").click();
+	}
+
+	
+	static RemoveImage (url) {
+		Debug.log("remove:"+url);
+		//urlがあるリストアイテムの「×」ボタンを押す
+		var uploadFileList = $("#sys_upload__status>ul");
+		for (var i = 0; i < uploadFileList.length; i++) {
+			if (uploadFileList[i].childNodes[1].innerHTML == url) {
+				uploadFileList[i].childNodes[3].childNodes[0].click();
+			}
+		}
+	}
+
+	static IsListed (url) {
+		var uploadFileList = $("#sys_upload__status>ul");
+		for (var i = 0; i < uploadFileList.length; i++) {
+			if (uploadFileList[i].childNodes[1].innerHTML == url) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	//アップロードファイルリストと同期をとる
+	SyncUploadFileList () {
+		var selectBoxList = this.body_.imgBoxList;
+		for (var i = 0; i < selectBoxList.length; i++) {
+			var selectBox = $(selectBoxList[i]);
+			var url = selectBox.children('img').attr('src');
+			$(selectBox).attr("class", "");
+			if (FlickrImageSelectBox.IsListed(url)) {
+				$(selectBox).attr("class", "flame check");	
+			}
+		}
+	}
 }
