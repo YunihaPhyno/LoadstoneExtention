@@ -1,8 +1,8 @@
 {
-  "name": "Loadstone Extension",
-  "version": "0.9.1",
-  "manifest_version": 2,
-  "description": "Loadstone Extension For Flickr",
+  "name": "Lodestone Extension",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "Lodestone Extension",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
