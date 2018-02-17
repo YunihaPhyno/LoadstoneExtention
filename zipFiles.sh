@@ -7,4 +7,5 @@ main.js \
 manifest.json \
 modal-test.css \
 options.html \
-options.js
+options.js \
+classes/* \
