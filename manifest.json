@@ -1,8 +1,8 @@
 {
-  "name": "Loadstone Extension",
-  "version": "0.9.9",
-  "manifest_version": 2,
-  "description": "Loadstone Extension For Flickr",
+  "name": "Lodestone Extension",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "Lodestone Extension",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -14,10 +14,22 @@
   "content_scripts": [
     {
       "matches": ["https://jp.finalfantasyxiv.com/lodestone/*"],
-      "js": ["jquery/jquery-3.2.1.min.js","main.js"],
+      "js": ["jquery/jquery-3.2.1.min.js",
+              "classes/Debug.class.js",
+              "classes/DocumentObjectBase.class.js",
+              "classes/Flickr.class.js",
+              "classes/ModalWindow.class.js",
+              "classes/FlickrWindows.class.js",
+              "classes/FlickrButton.class.js",
+              "main.js"],
       "css": ["modal-test.css"],
       "run_at": "document_start"
     }
   ],
+  "background": {
+    "scripts": [
+      "hot-reload.js"
+    ]
+  },
   "options_page":"options.html"
 }

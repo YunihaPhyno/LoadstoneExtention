@@ -1,29 +1,27 @@
-#modalWindowFlickr{
+/* #select_boxと同じ設定(select_boxのcssがid指定だったので移植) */
+.modal_overlay {
+    background-color: rgba(0,0,0,0.75);
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+}
+
+.modal_window{
 	z-index:100022;
 	position: absolute;
-	display:none;
 	width:1000px;
     height:auto;
-    margin-left: -60px;
-    margin-top: -80px;
     color: #ccc;
     border-radius: 6px;
     background-color: #383838;
     box-shadow: 0px 0px 0px 1px rgba(0,0,0,0.25) inset, 0px 1px 4px 0px rgba(0,0,0,0.25);
 }
 
-#modalOverlayFlickr{
-	z-index:100009;
-	display:none;
-	position:fixed;
-	top:0;
-	left:0;
-	width:100%;
-	height:120%;
-	background-color:rgba(0,0,0,0.75);
-}
-
-#imgSelectBoxFlickr li{
+#FlickrWindows .modal_window_body li{
 	cursor:pointer;
 	position:relative;
 	float:left;
@@ -34,17 +32,17 @@
 	list-style: none;
 	margin-bottom: 10px;
 	text-align: center;
-
 }
 
-#imgSelectBoxFlickr li:before{
+
+#FlickrWindows li:before{
     content:"";
     display: inline-block;
     height:100%;
     vertical-align: middle;
 }
 
-#imgSelectBoxFlickr li.check:after {
+#FlickrWindows li.check:after {
     content: '';
     position: absolute;
     right: 0;
@@ -59,14 +57,10 @@
     background-size: 32px 32px;
 }
 
-#imgSelectBoxFlickr img{
+#FlickrWindows img{
     width:auto;
     height:auto;
     max-width:100%;
     max-height:100%;    
     vertical-align: middle;
-}
-
-#imgSelectBoxFlickr ul{
-    margin: 10px;    
 }
