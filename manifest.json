@@ -17,7 +17,6 @@
       "js": ["jquery/jquery-3.2.1.min.js",
               "classes/Debug.class.js",
               "classes/DocumentObjectBase.class.js",
-              "classes/Chrome.class.js",
               "classes/Flickr.class.js",
               "classes/ModalWindow.class.js",
               "classes/FlickrWindows.class.js",
