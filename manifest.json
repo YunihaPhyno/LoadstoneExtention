@@ -26,10 +26,5 @@
       "run_at": "document_start"
     }
   ],
-  "background": {
-    "scripts": [
-      "hot-reload.js"
-    ]
-  },
   "options_page":"options.html"
 }
