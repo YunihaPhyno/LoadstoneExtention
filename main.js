@@ -17,12 +17,12 @@ function main () {
 	flickrButton.SetClickEvent ({modalWindow:flickrModalWindows}, function (event) {event.data.modalWindow.Open ();});
 
 	// 定型文関係
-	chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum", "title_diary", "title_forum"], OnLoadOptions);
+	chrome.storage.sync.get(["flickrUserId", "fixedPhrase", "fixedPhraseFCForum", "title_diary", "title_forum"], OnLoadOptions.bind (flickrModalWindows));
 }
 
 function OnLoadOptions (response) {
 	console.log (response);
-	flickrUserId = response["flickrUserId"];
+	this.CreateObjects (FlickrApi.Url2UserId(response["flickrUserId"]));
 
 	if (/my\/blog\/post\//.test(location.href)){
 		insertFixedPhrase (response["title_diary"],response["fixedPhrase"]);

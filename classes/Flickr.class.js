@@ -65,4 +65,8 @@ class FlickrApi {
 
 		return urlArray;
 	}
+
+	static Url2UserId (url) {
+		return url.replace(/[^0-9]+([0-9]+@.*[0-9]+)[^0-9]*/g,"$1");
+	}
 }
