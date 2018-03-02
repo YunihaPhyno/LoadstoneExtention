@@ -7,10 +7,9 @@ class FlickrWindows extends DocumentObjectBase {
 	constructor (id, parent) {
 		super (id);
 		this.parent_ = parent;
-		this.CreateObjects_ ();
 	}
 
-	CreateObjects_ () {
+	CreateObjects (flickrId) {
 		// ルートDOMの作成
 		this.CreateRoot_ ();
 
@@ -21,7 +20,7 @@ class FlickrWindows extends DocumentObjectBase {
 		this.overlay_.SetClickEvent({obj:this}, function (event){event.data.obj.FadeOut("slow")});
 
 		// メインウィンドウの作成
-		this.mainWindow_ = new FlickrImageSelectBox (this.root_,"画像を選択");
+		this.mainWindow_ = new FlickrImageSelectBox (flickrId,this.root_,"画像を選択");
 	}
 
 	// FlickrWindowsをfadeinするとなんか変な感じになる
@@ -54,7 +53,7 @@ class FlickrImageSelectBox extends ModalWindow {
 	// @members
 	// this.body_.imgBoxList = this.body_.children("ul").children("li");
 
-	constructor (parent,title) {
+	constructor (flickrId,parent,title) {
 		super (parent,title);
 
 		this.imgBoxRows = 4;
@@ -65,7 +64,7 @@ class FlickrImageSelectBox extends ModalWindow {
 		this.CreateFooter_ ();
 
 		// FlickrApiの初期化
-		this.flickrApi = new FlickrApi ("152412377@N03",this.imgBoxRows * this.imgBoxCols);
+		this.flickrApi = new FlickrApi (flickrId, this.imgBoxRows * this.imgBoxCols);
 
 		// 常に水平センタリング
 		$(window).bind("resize", {obj:this}, function (event){event.data.obj.HorizontalAlignCenterOnce();});
