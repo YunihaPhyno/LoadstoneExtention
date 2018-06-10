@@ -53,7 +53,7 @@ class FlickrApi {
 	}
 
 	static GetFlickrImgUrl (photo) {
-		return "http://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +"_h.jpg";
+		return "https://farm" + photo.getAttribute('farm') + ".staticflickr.com/"+ photo.getAttribute('server') +"/" + photo.getAttribute('id') + "_"+ photo.getAttribute('secret') +"_h.jpg";
 	}
 
 	static Xml2UrlArray (xmldata) {
